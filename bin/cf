@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+'use strict';
+
+process.title = 'CloudFlare API CLI';
+
+require( '../lib/cli' );
