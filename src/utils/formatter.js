@@ -1,5 +1,4 @@
 import Table from 'cli-table';
-import { map } from 'lodash';
 import log from './logger';
 
 class formatter {
@@ -37,7 +36,6 @@ class formatter {
 	 * Format the output as JSON
 	 *
 	 * @param {Array} rows Rows of the data
-	 * @param {string} separator Separator, default a space
 	 */
 	static toJson(rows) {
 		log.success(JSON.stringify(rows));
