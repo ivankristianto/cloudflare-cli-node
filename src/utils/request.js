@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { getAuthToken } from './config';
+import log from './logger';
 
 function defaultHeaders() {
 	return {
@@ -7,21 +8,64 @@ function defaultHeaders() {
 	};
 }
 
-export default async function request(url, method = 'GET', body = null, headersOpt = {}) {
+async function constructHeaders(headersOpt = {}) {
 	const authToken = await getAuthToken();
-	const headers = {
-		...defaultHeaders(authToken),
+	return {
 		Authorization: `Bearer ${authToken}`,
 		...headersOpt,
 	};
+}
 
-	const opts = { method, headers };
+async function requestInterface(url, method = 'GET', body = null, headersOpt = {}) {
+	const headers = await constructHeaders(headersOpt);
+
+	const opts = { method, headers: { ...headers, ...defaultHeaders() } };
 
 	if (method === 'POST' || method === 'PUT') {
 		opts.body = JSON.stringify(body);
 	}
 
-	const response = await fetch(url, opts);
+	try {
+		return await fetch(url, opts);
+	} catch (err) {
+		log.error(err);
+		return false;
+	}
+}
+
+export async function requestAsText(url, method = 'GET', body = null, headersOpt = {}) {
+	const response = await requestInterface(url, method, body, headersOpt);
+
+	if (response === false) {
+		return response;
+	}
+
+	return response.text();
+}
+
+export async function requestWithFormData(url, method = 'POST', body = null, headersOpt = {}) {
+	const headers = await constructHeaders(headersOpt);
+
+	const opts = { method, headers, body };
+
+	console.log('DEBUG: opts', opts); // eslint-disable-line no-console
+
+	try {
+		const response = await fetch(url, opts);
+
+		return response.json();
+	} catch (err) {
+		log.error(err);
+		return false;
+	}
+}
+
+export default async function request(url, method = 'GET', body = null, headersOpt = {}) {
+	const response = await requestInterface(url, method, body, headersOpt);
+
+	if (response === false) {
+		return response;
+	}
 
 	return response.json();
 }

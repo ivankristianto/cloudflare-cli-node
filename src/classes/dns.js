@@ -1,5 +1,7 @@
+import fs from 'fs-extra';
+import FormData from 'form-data';
 import { getRootApiURL } from '../utils/config';
-import request from '../utils/request';
+import request, { requestAsText, requestWithFormData } from '../utils/request';
 
 class DNS {
 	static async list(args = {}) {
@@ -93,6 +95,36 @@ class DNS {
 		);
 
 		const response = await request(dnsRecordsApiUrl.toString(), 'DELETE');
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
+
+	static async export(args = {}) {
+		const { zoneId = '' } = args;
+
+		const dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records/export`);
+
+		return requestAsText(dnsRecordsApiUrl.toString());
+	}
+
+	static async import(args = {}) {
+		const { inputFile, proxied = true, zoneId = '' } = args;
+
+		const dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records/import`);
+
+		if (!(await fs.pathExists(inputFile))) {
+			throw new Error(`Input File ${inputFile} does not exist`);
+		}
+
+		const formData = new FormData();
+		formData.append('file', fs.createReadStream(inputFile));
+		formData.append('proxied', proxied.toString());
+
+		const response = await requestWithFormData(dnsRecordsApiUrl.toString(), 'POST', formData);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);

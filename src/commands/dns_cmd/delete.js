@@ -10,7 +10,7 @@ exports.handler = async function (argv) {
 
 		await DNS.delete(requestArgs);
 
-		log.success('Record deleted');
+		log.success('1 Record deleted');
 	} catch (err) {
 		log.error(err);
 	}
