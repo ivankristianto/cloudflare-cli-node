@@ -1,22 +1,16 @@
 import fs from 'fs-extra';
 import FormData from 'form-data';
+import Parent from './parent';
 import { getRootApiURL } from '../utils/config';
 import request, { requestAsText, requestWithFormData } from '../utils/request';
 
-class DNS {
+class DNS extends Parent {
 	static async list(args = {}) {
-		const {
-			zoneId = '',
-			type = 'A',
-			name = '',
-			content = '',
-			order = 'type',
-			page = 1,
-			perPage = 20,
-			direction = 'asc',
-			match = 'any',
-		} = args;
-		const dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records`);
+		const { type = 'A', name = '', content = '' } = args;
+		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);
+		const zoneId = maybeZoneId || args.zoneId;
+
+		let dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records`);
 
 		if (type) {
 			dnsRecordsApiUrl.searchParams.append('type', type);
@@ -30,25 +24,7 @@ class DNS {
 			dnsRecordsApiUrl.searchParams.append('content', content);
 		}
 
-		if (order) {
-			dnsRecordsApiUrl.searchParams.append('order', order);
-		}
-
-		if (page) {
-			dnsRecordsApiUrl.searchParams.append('page', page.toString());
-		}
-
-		if (perPage) {
-			dnsRecordsApiUrl.searchParams.append('per_page', perPage.toString());
-		}
-
-		if (direction) {
-			dnsRecordsApiUrl.searchParams.append('direction', direction);
-		}
-
-		if (match) {
-			dnsRecordsApiUrl.searchParams.append('match', match);
-		}
+		dnsRecordsApiUrl = DNS.optionalParams(dnsRecordsApiUrl, args);
 
 		const response = await request(dnsRecordsApiUrl.toString());
 
@@ -60,15 +36,10 @@ class DNS {
 	}
 
 	static async create(args = {}) {
-		const {
-			zoneId = '',
-			type = 'A',
-			name = '',
-			content = '',
-			ttl = 1,
-			proxied = true,
-			priority = 0,
-		} = args;
+		const { type = 'A', name = '', content = '', ttl = 1, proxied = true, priority = 0 } = args;
+
+		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);
+		const zoneId = maybeZoneId || args.zoneId;
 
 		const requestArgs = { type, name, content, ttl, proxied };
 
@@ -88,7 +59,9 @@ class DNS {
 	}
 
 	static async delete(args = {}) {
-		const { zoneId = '', recordId = '' } = args;
+		const { recordId = '' } = args;
+		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);
+		const zoneId = maybeZoneId || args.zoneId;
 
 		const dnsRecordsApiUrl = new URL(
 			`${getRootApiURL()}zones/${zoneId}/dns_records/${recordId}`,
@@ -104,7 +77,8 @@ class DNS {
 	}
 
 	static async export(args = {}) {
-		const { zoneId = '' } = args;
+		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);
+		const zoneId = maybeZoneId || args.zoneId;
 
 		const dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records/export`);
 
@@ -112,7 +86,9 @@ class DNS {
 	}
 
 	static async import(args = {}) {
-		const { inputFile, proxied = true, zoneId = '' } = args;
+		const { inputFile, proxied = true } = args;
+		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);
+		const zoneId = maybeZoneId || args.zoneId;
 
 		const dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records/import`);
 

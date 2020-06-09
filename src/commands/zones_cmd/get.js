@@ -2,7 +2,7 @@ import Zones from '../../classes/zones';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'get <zoneId>';
+exports.command = 'get <zoneId|zoneName>';
 exports.desc = 'Get detail of a zone';
 exports.builder = {
 	zoneId: {

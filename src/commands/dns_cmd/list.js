@@ -3,7 +3,7 @@ import DNS from '../../classes/dns';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'list <zoneId>';
+exports.command = 'list <zoneId|zoneName>';
 exports.desc = 'List of dns records of a zone';
 exports.builder = {
 	fields: {
@@ -54,17 +54,7 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const {
-			fields,
-			separator,
-			perPage,
-			page,
-			order,
-			direction,
-			status,
-			zoneName,
-			zoneId,
-		} = argv;
+		const { fields, separator, perPage, page, order, direction, status, zoneId } = argv;
 		let { format } = argv;
 
 		if (fields === 'id') {
@@ -72,10 +62,6 @@ exports.handler = async function (argv) {
 		}
 
 		const requestArgs = { zoneId, perPage, page, order, direction, status };
-
-		if (zoneName) {
-			requestArgs.zoneName = zoneName;
-		}
 
 		const response = await DNS.list(requestArgs);
 

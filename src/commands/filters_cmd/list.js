@@ -3,7 +3,7 @@ import Filters from '../../classes/filters';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'list <zoneId>';
+exports.command = 'list <zoneId|zoneName>';
 exports.desc = 'List of filters';
 exports.builder = {
 	zoneId: {

@@ -1,18 +1,21 @@
+import Parent from './parent';
 import { getRootApiURL } from '../utils/config';
 import request from '../utils/request';
 
-class Firewall {
-	static async list(zoneId, args = {}) {
-		const { page = 1, perPage = 20 } = args;
-		const firewallApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/firewall/rules`);
+class Firewall extends Parent {
+	/**
+	 * List Firewall Rules
+	 *
+	 * @param {string} zone Zone ID or Zone Name
+	 * @param {Array} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
+	static async list(zone, args = {}) {
+		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
+		let firewallApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/firewall/rules`);
 
-		if (page) {
-			firewallApiUrl.searchParams.append('page', page.toString());
-		}
-
-		if (perPage) {
-			firewallApiUrl.searchParams.append('per_page', perPage.toString());
-		}
+		firewallApiUrl = Firewall.optionalParams(firewallApiUrl, args);
 
 		const response = await request(firewallApiUrl.toString());
 
@@ -23,7 +26,16 @@ class Firewall {
 		return response;
 	}
 
-	static async get(zoneId, firewallId) {
+	/**
+	 * Get Firewall Detail
+	 *
+	 * @param {string} zone Zone ID or Zone Name
+	 * @param {string} firewallId Firewall ID
+	 * @returns {Promise<*>}
+	 */
+	static async get(zone, firewallId) {
+		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
 		const firewallApiUrl = new URL(
 			`${getRootApiURL()}zones/${zoneId}/firewall/rules/${firewallId}`,
 		);
@@ -37,7 +49,16 @@ class Firewall {
 		return response;
 	}
 
-	static async add(zoneId, rules) {
+	/**
+	 * Add Firewall Rule
+	 *
+	 * @param {string} zone Zone ID or Zone Name
+	 * @param {string} rules Firewall rule in json object
+	 * @returns {Promise<*>}
+	 */
+	static async add(zone, rules) {
+		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
 		const firewallApiUrl = new URL(`${getRootApiURL}zones/${zoneId}/firewall/rules`);
 
 		const response = await request(firewallApiUrl.toString(), 'POST', rules);
@@ -49,7 +70,16 @@ class Firewall {
 		return response;
 	}
 
-	static async delete(zoneId, firewallId) {
+	/**
+	 * Delete a Firewall Rule
+	 *
+	 * @param {string} zone Zone ID or Zone Name
+	 * @param {string} firewallId Firewall ID
+	 * @returns {Promise<*>}
+	 */
+	static async delete(zone, firewallId) {
+		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
 		const firewallApiUrl = `${getRootApiURL}zones/${zoneId}/firewall/rules/${firewallId}`;
 
 		const response = await request(firewallApiUrl.toString(), 'DELETE');

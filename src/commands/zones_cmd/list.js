@@ -62,9 +62,11 @@ exports.handler = async function (argv) {
 		}
 
 		const requestArgs = { perPage, page, order, direction, status };
+
 		if (zoneName) {
 			requestArgs.zoneName = zoneName;
 		}
+
 		const response = await Zones.list(requestArgs);
 
 		const results = map(response.result, function (item) {

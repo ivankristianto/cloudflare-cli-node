@@ -1,17 +1,11 @@
+import Parent from './parent';
 import { getRootApiURL } from '../utils/config';
 import request from '../utils/request';
 
-class Zones {
+class Zones extends Parent {
 	static async list(args = {}) {
-		const {
-			status = 'active',
-			zoneName = '',
-			order = 'name',
-			page = 1,
-			perPage = 20,
-			direction = 'asc',
-		} = args;
-		const zonesApiUrl = new URL(`${getRootApiURL()}zones`);
+		const { status = 'active', zoneName = '' } = args;
+		let zonesApiUrl = new URL(`${getRootApiURL()}zones`);
 
 		if (zoneName) {
 			zonesApiUrl.searchParams.append('name', zoneName);
@@ -21,21 +15,7 @@ class Zones {
 			zonesApiUrl.searchParams.append('status', status);
 		}
 
-		if (order) {
-			zonesApiUrl.searchParams.append('order', order);
-		}
-
-		if (page) {
-			zonesApiUrl.searchParams.append('page', page.toString());
-		}
-
-		if (perPage) {
-			zonesApiUrl.searchParams.append('per_page', perPage.toString());
-		}
-
-		if (direction) {
-			zonesApiUrl.searchParams.append('direction', direction);
-		}
+		zonesApiUrl = Zones.optionalParams(zonesApiUrl, args);
 
 		const response = await request(zonesApiUrl.toString());
 
@@ -46,7 +26,17 @@ class Zones {
 		return response;
 	}
 
-	static async get(zoneId) {
+	/**
+	 * Get details of a zone of the string given
+	 *
+	 * @param {string} zone Maybe Zone ID or Zone Name
+	 * @returns {Promise<*>}
+	 */
+	static async get(zone) {
+		const maybeZoneId = await Zones.convertZoneNameToId(zone);
+
+		const zoneId = maybeZoneId || zone;
+
 		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}`);
 
 		const response = await request(zonesApiUrl.toString());
