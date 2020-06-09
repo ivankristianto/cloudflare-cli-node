@@ -10,7 +10,7 @@ class Zones extends Parent {
 	 * @returns {Promise<*>}
 	 */
 	static async list(args = {}) {
-		const { status = 'active', zoneName = '' } = args;
+		const { status = '', zoneName = '' } = args;
 		let zonesApiUrl = new URL(`${getRootApiURL()}zones`);
 
 		if (zoneName) {
@@ -33,6 +33,27 @@ class Zones extends Parent {
 	}
 
 	/**
+	 * Delete a Zone
+	 *
+	 * @param {string} zone Maybe Zone ID or Zone Name
+	 * @returns {Promise<*>}
+	 */
+	static async delete(zone) {
+		const maybeZoneId = await Zones.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
+
+		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}`);
+
+		const response = await request(zonesApiUrl.toString(), 'DELETE');
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
+
+	/**
 	 * Get details of a zone of the string given
 	 *
 	 * @param {string} zone Maybe Zone ID or Zone Name
@@ -40,7 +61,6 @@ class Zones extends Parent {
 	 */
 	static async get(zone) {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
-
 		const zoneId = maybeZoneId || zone;
 
 		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}`);
@@ -85,6 +105,28 @@ class Zones extends Parent {
 		if (Array.isArray(hosts) && hosts.length) {
 			requestArgs.hosts = hosts;
 		}
+
+		const response = await request(zonesApiUrl.toString(), 'POST', requestArgs);
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
+
+	/**
+	 * Create a new Zone
+	 *
+	 * @param {object} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
+	static async create(args = {}) {
+		const { accountId, jumpStart = true, name, type = 'full' } = args;
+
+		const requestArgs = { account: { id: accountId }, jump_start: jumpStart, name, type };
+
+		const zonesApiUrl = new URL(`${getRootApiURL()}zones`);
 
 		const response = await request(zonesApiUrl.toString(), 'POST', requestArgs);
 

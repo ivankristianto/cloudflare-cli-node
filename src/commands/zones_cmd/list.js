@@ -41,7 +41,6 @@ exports.builder = {
 		type: 'string',
 	},
 	status: {
-		default: 'active',
 		describe: 'Status of the zone',
 		type: 'string',
 	},
@@ -60,10 +59,14 @@ exports.handler = async function (argv) {
 			format = 'string';
 		}
 
-		const requestArgs = { perPage, page, order, direction, status };
+		const requestArgs = { perPage, page, order, direction };
 
 		if (zoneName) {
 			requestArgs.zoneName = zoneName;
+		}
+
+		if (status) {
+			requestArgs.status = status;
 		}
 
 		const response = await Zones.list(requestArgs);

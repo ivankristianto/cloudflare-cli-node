@@ -52,13 +52,18 @@ class Parent {
 	static async convertZoneNameToId(zoneName) {
 		if (Parent.isDomain(zoneName)) {
 			// zoneId is a domain, need to change to zone id.
-			const zoneListResponseString = await execSync(
+			let zoneListResponseString = await execSync(
 				`cf zones list --zoneName=${zoneName} --fields=id`,
-			).toString();
+			);
 
+			if (!zoneListResponseString) {
+				throw new Error('Zone not found');
+			}
+
+			zoneListResponseString = zoneListResponseString.toString();
 			// our child process return error
-			if (!zoneListResponseString.includes('Error')) {
-				return zoneListResponseString;
+			if (!zoneListResponseString.includes('Error') && zoneListResponseString.length > 0) {
+				return zoneListResponseString.trim();
 			}
 
 			return false;
