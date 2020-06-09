@@ -48,8 +48,6 @@ export async function requestWithFormData(url, method = 'POST', body = null, hea
 
 	const opts = { method, headers, body };
 
-	console.log('DEBUG: opts', opts); // eslint-disable-line no-console
-
 	try {
 		const response = await fetch(url, opts);
 

@@ -53,6 +53,47 @@ class Zones extends Parent {
 
 		return response;
 	}
+
+	/**
+	 * Purge Cache from a Zone
+	 *
+	 * @param {string} zone Maybe Zone ID or Zone Name
+	 * @param {object} args optional parameters
+	 * @returns {Promise<*>}
+	 */
+	static async purge(zone, { all = false, files = [], tags = [], hosts = [] }) {
+		const maybeZoneId = await Zones.convertZoneNameToId(zone);
+
+		const zoneId = maybeZoneId || zone;
+
+		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/purge_cache`);
+
+		const requestArgs = {};
+
+		if (all) {
+			requestArgs.purge_everything = true;
+		}
+
+		if (Array.isArray(files) && files.length) {
+			requestArgs.files = files;
+		}
+
+		if (Array.isArray(tags) && tags.length) {
+			requestArgs.tags = tags;
+		}
+
+		if (Array.isArray(hosts) && hosts.length) {
+			requestArgs.hosts = hosts;
+		}
+
+		const response = await request(zonesApiUrl.toString(), 'POST', requestArgs);
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
 }
 
 export default Zones;

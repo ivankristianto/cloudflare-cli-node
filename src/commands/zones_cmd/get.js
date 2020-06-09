@@ -34,6 +34,10 @@ exports.handler = async function (argv) {
 			format = 'string';
 		}
 
+		if (fields === 'name_servers') {
+			format = 'json';
+		}
+
 		const response = await Zones.get(zoneId);
 
 		const results = [];

@@ -1,4 +1,3 @@
-import { map } from 'lodash';
 import Zones from '../../classes/zones';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
