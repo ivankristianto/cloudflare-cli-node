@@ -3,6 +3,12 @@ import { getRootApiURL } from '../utils/config';
 import request from '../utils/request';
 
 class Zones extends Parent {
+	/**
+	 * List all zones
+	 *
+	 * @param {Array} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
 	static async list(args = {}) {
 		const { status = 'active', zoneName = '' } = args;
 		let zonesApiUrl = new URL(`${getRootApiURL()}zones`);

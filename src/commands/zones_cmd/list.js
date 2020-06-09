@@ -69,15 +69,7 @@ exports.handler = async function (argv) {
 
 		const response = await Zones.list(requestArgs);
 
-		const results = map(response.result, function (item) {
-			const output = [];
-
-			fields.split(',').forEach(function (field) {
-				output.push(item[field] ? item[field] : '');
-			});
-
-			return output;
-		});
+		const results = formatter.mappingFields(fields, response.result);
 
 		switch (format) {
 			case 'json':

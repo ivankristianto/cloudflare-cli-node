@@ -5,6 +5,12 @@ import { getRootApiURL } from '../utils/config';
 import request, { requestAsText, requestWithFormData } from '../utils/request';
 
 class DNS extends Parent {
+	/**
+	 * List DNS Records of a Zone
+	 *
+	 * @param {Array} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
 	static async list(args = {}) {
 		const { type = 'A', name = '', content = '' } = args;
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);
@@ -35,6 +41,12 @@ class DNS extends Parent {
 		return response;
 	}
 
+	/**
+	 * Create a DNS Records for a Zone
+	 *
+	 * @param {Array} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
 	static async create(args = {}) {
 		const { type = 'A', name = '', content = '', ttl = 1, proxied = true, priority = 0 } = args;
 
@@ -58,6 +70,12 @@ class DNS extends Parent {
 		return response;
 	}
 
+	/**
+	 * Delete a DNS Records for a Zone
+	 *
+	 * @param {Array} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
 	static async delete(args = {}) {
 		const { recordId = '' } = args;
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);
@@ -76,6 +94,12 @@ class DNS extends Parent {
 		return response;
 	}
 
+	/**
+	 * Export all DNS Records for a Zone into a txt file
+	 *
+	 * @param {Array} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
 	static async export(args = {}) {
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);
 		const zoneId = maybeZoneId || args.zoneId;
@@ -85,6 +109,12 @@ class DNS extends Parent {
 		return requestAsText(dnsRecordsApiUrl.toString());
 	}
 
+	/**
+	 * Bulk Import DNS Records for a Zone from a txt file
+	 *
+	 * @param {Array} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
 	static async import(args = {}) {
 		const { inputFile, proxied = true } = args;
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zoneId);

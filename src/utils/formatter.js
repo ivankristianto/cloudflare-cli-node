@@ -1,4 +1,5 @@
 import Table from 'cli-table';
+import { map } from 'lodash';
 import log from './logger';
 
 class formatter {
@@ -39,6 +40,25 @@ class formatter {
 	 */
 	static toJson(rows) {
 		log.success(JSON.stringify(rows));
+	}
+
+	/**
+	 * Filter fields from array of json objects
+	 *
+	 * @param {string} fields Fields to get in comma separated
+	 * @param {Array} results Array of json objects.
+	 * @returns {Array}
+	 */
+	static mappingFields(fields, results) {
+		return map(results, function (item) {
+			const output = [];
+
+			fields.split(',').forEach(function (field) {
+				output.push(item[field] ? item[field] : '');
+			});
+
+			return output;
+		});
 	}
 }
 
