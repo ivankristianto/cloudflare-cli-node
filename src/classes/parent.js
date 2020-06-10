@@ -1,6 +1,13 @@
 import { execSync } from 'child_process';
 
 class Parent {
+	/**
+	 * Add optional params to the url query string.
+	 *
+	 * @param {URL} urlObject URL Object
+	 * @param {object} args Arguments of optional params
+	 * @returns {URL}
+	 */
 	static optionalParams(urlObject, args = {}) {
 		const { order = '', page = 1, perPage = 20, direction = 'asc', match = 'all' } = args;
 
@@ -27,6 +34,12 @@ class Parent {
 		return urlObject;
 	}
 
+	/**
+	 * Try to test if the string given is a domain name
+	 *
+	 * @param {string} str String to test
+	 * @returns {boolean} True of string a domain
+	 */
 	static isDomain(str) {
 		try {
 			const regex = /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/s;

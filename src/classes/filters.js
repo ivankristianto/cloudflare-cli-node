@@ -7,7 +7,7 @@ class Filters extends Parent {
 	 * List Firewall Filter
 	 *
 	 * @param {string} zone Zone ID or Zone Name
-	 * @param {Array} args Arguments to pass to request string
+	 * @param {object} args Arguments to pass to request string
 	 * @returns {Promise<*>}
 	 */
 	static async list(zone, args = {}) {

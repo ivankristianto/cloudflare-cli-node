@@ -12,7 +12,7 @@ class DNS extends Parent {
 	 * @returns {Promise<*>}
 	 */
 	static async list(args = {}) {
-		const { type = 'A', name = '', content = '' } = args;
+		const { type = '', name = '', content = '' } = args;
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
 		const zoneId = maybeZoneId || args.zone;
 

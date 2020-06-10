@@ -7,15 +7,20 @@ class Firewall extends Parent {
 	 * List Firewall Rules
 	 *
 	 * @param {string} zone Zone ID or Zone Name
-	 * @param {Array} args Arguments to pass to request string
+	 * @param {object} args Arguments to pass to request string
 	 * @returns {Promise<*>}
 	 */
 	static async list(zone, args = {}) {
+		const { description = '', perPage = 20, page = 1 } = args;
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
 		let firewallApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/firewall/rules`);
 
-		firewallApiUrl = Firewall.optionalParams(firewallApiUrl, args);
+		if (description) {
+			firewallApiUrl.searchParams.append('description', description);
+		}
+
+		firewallApiUrl = Firewall.optionalParams(firewallApiUrl, { perPage, page });
 
 		const response = await request(firewallApiUrl.toString());
 

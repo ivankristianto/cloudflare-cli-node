@@ -6,6 +6,10 @@ import formatter from '../../utils/formatter';
 exports.command = 'list <zone>';
 exports.desc = 'List of zone firewall rules';
 exports.builder = {
+	description: {
+		describe: 'Find rules that has case-insensitive text in description value',
+		type: 'string',
+	},
 	fields: {
 		default: 'id,description,action',
 		describe: 'Fields to return',
@@ -34,14 +38,14 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, separator, perPage, page, zone } = argv;
+		const { description, fields, separator, perPage, page, zone } = argv;
 		let { format } = argv;
 
 		if (fields === 'id') {
 			format = 'string';
 		}
 
-		const requestArgs = { perPage, page };
+		const requestArgs = { description, perPage, page };
 		const response = await Firewall.list(zone, requestArgs);
 
 		const results = map(response.result, function (item) {

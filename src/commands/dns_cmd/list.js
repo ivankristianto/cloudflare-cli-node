@@ -7,7 +7,7 @@ exports.command = 'list <zone>';
 exports.desc = 'List of dns records of a zone';
 exports.builder = {
 	fields: {
-		default: 'id,type,name,content',
+		default: 'id,type,name,content,proxied',
 		describe: 'Fields to return',
 		type: 'string',
 	},
@@ -47,21 +47,21 @@ exports.builder = {
 		type: 'string',
 	},
 	type: {
-		default: 'A',
-		describe: 'DNS record type, default A',
+		describe:
+			'DNS record type, valid values: A, AAAA, CNAME, TXT, SRV, LOC, MX, NS, SPF, CERT, DNSKEY, DS, NAPTR, SMIMEA, SSHFP, TLSA, URI',
 		type: 'string',
 	},
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, separator, perPage, page, order, direction, status, zone } = argv;
+		const { fields, separator, perPage, page, order, direction, status, type, zone } = argv;
 		let { format } = argv;
 
 		if (fields === 'id') {
 			format = 'string';
 		}
 
-		const requestArgs = { zone, perPage, page, order, direction, status };
+		const requestArgs = { zone, perPage, page, order, direction, status, type };
 
 		const response = await DNS.list(requestArgs);
 
