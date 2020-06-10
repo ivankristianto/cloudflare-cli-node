@@ -2,8 +2,8 @@ import Zones from '../../classes/zones';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'create <zoneName>';
-exports.desc = 'Create a new Zone';
+exports.command = 'create <zone>';
+exports.desc = 'Create new zone, permission needed: #zone:edit';
 exports.builder = {
 	accountId: {
 		describe: 'Account ID where Zone added to',
@@ -17,17 +17,16 @@ exports.builder = {
 	},
 	type: {
 		default: 'full',
-		describe:
-			'A full zone implies that DNS is hosted with Cloudflare. A partial zone is typically a partner-hosted zone or a CNAME setup. valid values: full, partial',
+		describe: 'A full or partial zone hosted with Cloudflare. default: full',
 		type: 'string',
 	},
 };
 exports.handler = async function (argv) {
 	try {
-		const { accountId, jumpStart, type, zoneName } = argv;
+		const { accountId, jumpStart, type, zone } = argv;
 
 		const requestArgs = {
-			name: zoneName,
+			name: zone,
 			accountId,
 			jumpStart,
 			type,

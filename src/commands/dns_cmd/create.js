@@ -2,7 +2,7 @@ import DNS from '../../classes/dns';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'create <zoneId>';
+exports.command = 'create <zone>';
 exports.desc = 'Create a dns record for a zone';
 exports.builder = {
 	type: {
@@ -41,9 +41,9 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { type, name, content, ttl, proxied, priority, zoneId } = argv;
+		const { type, name, content, ttl, proxied, priority, zone } = argv;
 
-		const requestArgs = { type, name, content, ttl, proxied, priority, zoneId };
+		const requestArgs = { type, name, content, ttl, proxied, priority, zone };
 
 		const response = await DNS.create(requestArgs);
 

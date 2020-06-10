@@ -3,7 +3,7 @@ import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
 exports.command = 'list';
-exports.desc = 'List of zones';
+exports.desc = 'List, search, sort, and filter your zones';
 exports.builder = {
 	fields: {
 		default: 'id,name,status',

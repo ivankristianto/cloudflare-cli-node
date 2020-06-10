@@ -1,7 +1,7 @@
 import DNS from '../../classes/dns';
 import log from '../../utils/logger';
 
-exports.command = 'delete <zoneId> <recordId>';
+exports.command = 'delete <zone> <recordId>';
 exports.desc = 'Delete a dns record in a zone';
 exports.builder = {};
 exports.handler = async function (argv) {

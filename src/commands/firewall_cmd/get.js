@@ -2,17 +2,9 @@ import Firewall from '../../classes/firewall';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'get <zoneId> <firewallId>';
-exports.desc = 'Get detail of a zone';
+exports.command = 'get <zone> <firewallId>';
+exports.desc = 'Get details of a zone firewall';
 exports.builder = {
-	zoneId: {
-		describe: 'Zone ID',
-		type: 'string',
-	},
-	firewallId: {
-		describe: 'Firewall ID',
-		type: 'string',
-	},
 	fields: {
 		default: 'id,description,filter',
 		describe: 'Fields to return',
@@ -31,14 +23,14 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, firewallId, separator, zoneId } = argv;
+		const { fields, firewallId, separator, zone } = argv;
 		let { format } = argv;
 
 		if (fields === 'id') {
 			format = 'string';
 		}
 
-		const response = await Firewall.get(zoneId, firewallId);
+		const response = await Firewall.get(zone, firewallId);
 
 		const results = [];
 

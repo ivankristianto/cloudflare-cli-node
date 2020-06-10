@@ -1,13 +1,9 @@
 import Zones from '../../classes/zones';
 import log from '../../utils/logger';
 
-exports.command = 'purge <zoneId|zoneName>';
-exports.desc = 'Purge All Caches';
+exports.command = 'purge <zone>';
+exports.desc = 'Purge caches';
 exports.builder = {
-	zoneId: {
-		describe: 'Zone ID',
-		type: 'string',
-	},
 	all: {
 		default: false,
 		describe: 'Purge Everything',
@@ -31,16 +27,14 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { all, files, hosts, tags, zoneId } = argv;
+		const { all, files, hosts, tags, zone } = argv;
 
 		const requestArgs = { all, files, hosts, tags };
 
-		console.log('DEBUG: hosts', hosts); // eslint-disable-line no-console
-
-		const response = await Zones.purge(zoneId, requestArgs);
+		const response = await Zones.purge(zone, requestArgs);
 
 		if (response.success) {
-			log.success('Zone Cache Purges Successfully');
+			log.success('Zone Cache(s) Purges Successfully');
 		} else {
 			log.error(`Error: ${response.errors[0]}`);
 		}

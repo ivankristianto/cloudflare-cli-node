@@ -2,13 +2,9 @@ import Filters from '../../classes/filters';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'get <zoneId> <filterId>';
-exports.desc = 'Get detail of a zone';
+exports.command = 'get <zone> <filterId>';
+exports.desc = 'Get detail of a zone firewall filters';
 exports.builder = {
-	zoneId: {
-		describe: 'Zone ID',
-		type: 'string',
-	},
 	filterId: {
 		describe: 'Filter ID',
 		type: 'string',
@@ -31,14 +27,14 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, filterId, separator, zoneId } = argv;
+		const { fields, filterId, separator, zone } = argv;
 		let { format } = argv;
 
 		if (fields === 'id') {
 			format = 'string';
 		}
 
-		const response = await Filters.get(zoneId, filterId);
+		const response = await Filters.get(zone, filterId);
 
 		const results = [];
 

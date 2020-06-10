@@ -2,13 +2,9 @@ import Zones from '../../classes/zones';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'get <zoneId|zoneName>';
-exports.desc = 'Get detail of a zone';
+exports.command = 'get <zone>';
+exports.desc = 'Get zone details';
 exports.builder = {
-	zoneId: {
-		describe: 'Zone ID',
-		type: 'string',
-	},
 	fields: {
 		default: 'id,name,status,name_servers',
 		describe: 'Fields to return',
@@ -27,7 +23,7 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, separator, zoneId } = argv;
+		const { fields, separator, zone } = argv;
 		let { format } = argv;
 
 		if (fields === 'id') {
@@ -38,7 +34,7 @@ exports.handler = async function (argv) {
 			format = 'json';
 		}
 
-		const response = await Zones.get(zoneId);
+		const response = await Zones.get(zone);
 
 		const results = [];
 

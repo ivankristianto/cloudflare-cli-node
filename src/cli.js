@@ -7,7 +7,7 @@ import log from './utils/logger';
 // eslint-disable-next-line consistent-return
 function main() {
 	try {
-		return yargs.commandDir('commands').demandCommand().help().argv;
+		return yargs.commandDir('commands').demandCommand().help().wrap(120).argv;
 	} catch (e) {
 		log.error(e.toString());
 	}

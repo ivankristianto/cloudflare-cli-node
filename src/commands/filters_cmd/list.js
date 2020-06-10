@@ -3,13 +3,9 @@ import Filters from '../../classes/filters';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'list <zoneId|zoneName>';
-exports.desc = 'List of filters';
+exports.command = 'list <zone>';
+exports.desc = 'List of zone available firewall filters';
 exports.builder = {
-	zoneId: {
-		describe: 'Zone ID',
-		type: 'string',
-	},
 	fields: {
 		default: 'id,expression',
 		describe: 'Fields to return',
@@ -38,7 +34,7 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, separator, perPage, page, zoneId } = argv;
+		const { fields, separator, perPage, page, zone } = argv;
 		let { format } = argv;
 
 		if (fields === 'id') {
@@ -46,7 +42,7 @@ exports.handler = async function (argv) {
 		}
 
 		const requestArgs = { perPage, page };
-		const response = await Filters.list(zoneId, requestArgs);
+		const response = await Filters.list(zone, requestArgs);
 
 		const results = map(response.result, function (item) {
 			const output = [];

@@ -1,5 +1,5 @@
-exports.command = 'user <command>';
-exports.desc = 'Get User and Organization Details';
+exports.command = 'user';
+exports.desc = 'Get current user and organization';
 exports.builder = function (yargs) {
 	return yargs.commandDir('users_cmd');
 };

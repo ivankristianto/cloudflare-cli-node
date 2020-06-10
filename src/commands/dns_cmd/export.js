@@ -2,7 +2,7 @@ import fs from 'fs';
 import DNS from '../../classes/dns';
 import log from '../../utils/logger';
 
-exports.command = 'export <zoneId>';
+exports.command = 'export <zone>';
 exports.desc = 'Export dns records for a zone';
 exports.builder = {
 	output: {
@@ -13,9 +13,9 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { output, zoneId } = argv;
+		const { output, zone } = argv;
 
-		const response = await DNS.export({ zoneId });
+		const response = await DNS.export({ zone });
 
 		const fd = fs.openSync(output, 'w+');
 		fs.writeSync(fd, response);

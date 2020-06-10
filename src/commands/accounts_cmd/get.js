@@ -3,7 +3,7 @@ import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
 exports.command = 'get <accountId>';
-exports.desc = 'Get detail of an account';
+exports.desc = 'Get information about a specific account that you are a member of';
 exports.builder = {
 	fields: {
 		default: 'id,name,type',

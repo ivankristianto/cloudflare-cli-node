@@ -3,7 +3,7 @@ import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
 exports.command = 'get';
-exports.desc = 'Get detail of current user';
+exports.desc = 'Get details of current user';
 exports.builder = {
 	fields: {
 		default: 'id,email,username',

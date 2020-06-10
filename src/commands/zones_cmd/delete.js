@@ -2,21 +2,16 @@ import Zones from '../../classes/zones';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'delete <zoneId|zoneName>';
+exports.command = 'delete <zone>';
 exports.desc = 'Delete a zone';
-exports.builder = {
-	zoneId: {
-		describe: 'Zone ID',
-		type: 'string',
-	},
-};
+exports.builder = {};
 exports.handler = async function (argv) {
 	try {
-		const { zoneId } = argv;
+		const { zone } = argv;
 
-		await Zones.delete(zoneId);
+		await Zones.delete(zone);
 
-		formatter.toJson(`Zone ${zoneId} succesfully deleted`);
+		formatter.toJson(`Zone ${zone} succesfully deleted`);
 	} catch (err) {
 		log.error(err);
 	}
