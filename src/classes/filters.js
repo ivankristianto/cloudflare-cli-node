@@ -4,20 +4,18 @@ import request from '../utils/request';
 
 class Filters extends Parent {
 	/**
-	 * List Firewall Filter
+	 * Delete a Firewall Filter
 	 *
 	 * @param {string} zone Zone ID or Zone Name
-	 * @param {object} args Arguments to pass to request string
+	 * @param {string} filterId filter ID
 	 * @returns {Promise<*>}
 	 */
-	static async list(zone, args = {}) {
+	static async delete(zone, filterId) {
 		const maybeZoneId = await Filters.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		let filterApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/filters`);
+		const filterApiUrl = `${getRootApiURL}zones/${zoneId}/filters/${filterId}`;
 
-		filterApiUrl = Filters.optionalParams(filterApiUrl, args);
-
-		const response = await request(filterApiUrl.toString());
+		const response = await request(filterApiUrl.toString(), 'DELETE');
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -48,18 +46,46 @@ class Filters extends Parent {
 	}
 
 	/**
-	 * Delete a Firewall Filter
+	 * List Firewall Filter
+	 *
+	 * @param {string} zone Zone ID or Zone Name
+	 * @param {object} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
+	static async list(zone, args = {}) {
+		const maybeZoneId = await Filters.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
+		let filterApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/filters`);
+
+		filterApiUrl = Filters.optionalParams(filterApiUrl, args);
+
+		const response = await request(filterApiUrl.toString());
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
+
+	/**
+	 * Update a single filter
 	 *
 	 * @param {string} zone Zone ID or Zone Name
 	 * @param {string} filterId filter ID
+	 * @param {object} args Filter object
 	 * @returns {Promise<*>}
 	 */
-	static async delete(zone, filterId) {
+	static async update(zone, filterId, args) {
+		const { paused = false, expression } = args;
 		const maybeZoneId = await Filters.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		const filterApiUrl = `${getRootApiURL}zones/${zoneId}/filters/${filterId}`;
 
-		const response = await request(filterApiUrl.toString(), 'DELETE');
+		const filterResponse = await Filters.get(zone, filterId);
+		const filter = { ...filterResponse.result, paused, expression };
+
+		const filterApiUrl = `${getRootApiURL()}zones/${zoneId}/filters/${filterId}`;
+		const response = await request(filterApiUrl.toString(), 'PUT', filter);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);

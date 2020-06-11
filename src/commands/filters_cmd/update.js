@@ -1,13 +1,22 @@
-import { map } from 'lodash';
 import Filters from '../../classes/filters';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 
-exports.command = 'list <zone>';
-exports.desc = 'List of zone available firewall filters';
+exports.command = 'update <zone> <filterId>';
+exports.desc = 'Update a single filter';
 exports.builder = {
+	expression: {
+		describe: 'Filter Expression Rule',
+		type: 'string',
+		demandOption: true,
+	},
+	paused: {
+		default: false,
+		describe: 'Pause filter',
+		type: 'boolean',
+	},
 	fields: {
-		default: 'id,expression',
+		default: 'id,expression,paused',
 		describe: 'Fields to return',
 		type: 'string',
 	},
@@ -21,30 +30,14 @@ exports.builder = {
 		describe: 'Separator value when the output format is string',
 		type: 'string',
 	},
-	perPage: {
-		default: 20,
-		describe: 'Number of zones per page',
-		type: 'integer',
-	},
-	page: {
-		default: 1,
-		describe: 'Page number of paginated results',
-		type: 'integer',
-	},
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, separator, perPage, page, zone } = argv;
-		let { format } = argv;
+		const { description, expression, paused, fields, format, filterId, separator, zone } = argv;
+		const requestArgs = { description, expression, paused };
+		const response = await Filters.update(zone, filterId, requestArgs);
 
-		if (fields === 'id') {
-			format = 'string';
-		}
-
-		const requestArgs = { perPage, page };
-		const response = await Filters.list(zone, requestArgs);
-
-		const results = formatter.mappingFields(fields, response.result);
+		const results = formatter.mappingField(fields, response.result);
 
 		switch (format) {
 			case 'json':
@@ -55,7 +48,7 @@ exports.handler = async function (argv) {
 				break;
 			case 'table':
 			default:
-				formatter.toTable(fields, results);
+				formatter.toTable(fields, [results]);
 				break;
 		}
 	} catch (err) {

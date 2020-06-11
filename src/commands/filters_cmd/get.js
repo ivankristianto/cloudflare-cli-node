@@ -5,12 +5,8 @@ import formatter from '../../utils/formatter';
 exports.command = 'get <zone> <filterId>';
 exports.desc = 'Get detail of a zone firewall filters';
 exports.builder = {
-	filterId: {
-		describe: 'Filter ID',
-		type: 'string',
-	},
 	fields: {
-		default: 'id,expression',
+		default: 'id,expression,paused',
 		describe: 'Fields to return',
 		type: 'string',
 	},
@@ -36,15 +32,7 @@ exports.handler = async function (argv) {
 
 		const response = await Filters.get(zone, filterId);
 
-		const results = [];
-
-		fields.split(',').forEach((field) => {
-			if (field === 'filter') {
-				results.push(response.result[field].id);
-				return;
-			}
-			results.push(response.result[field]);
-		});
+		const results = formatter.mappingField(fields, response.result);
 
 		switch (format) {
 			case 'json':

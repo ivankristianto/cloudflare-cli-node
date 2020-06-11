@@ -60,6 +60,26 @@ class formatter {
 			return output;
 		});
 	}
+
+	/**
+	 * Filter fields from a json object
+	 *
+	 * @param {string} fields Fields to get in comma separated
+	 * @param {object} result A json objects.
+	 * @returns {Array}
+	 */
+	static mappingField(fields, result) {
+		const results = [];
+		fields.split(',').forEach((field) => {
+			if (field === 'filter') {
+				result.push(result[field].id);
+				return;
+			}
+			results.push(result[field]);
+		});
+
+		return results;
+	}
 }
 
 export default formatter;
