@@ -4,18 +4,18 @@ import request from '../utils/request';
 
 class Firewall extends Parent {
 	/**
-	 * Add Firewall Rule
+	 * Create a new Firewall Rule
 	 *
 	 * @param {string} zone Zone ID or Zone Name
-	 * @param {string} rules Firewall rule in json object
+	 * @param {object} rules Firewall rule in json object
 	 * @returns {Promise<*>}
 	 */
-	static async add(zone, rules) {
+	static async create(zone, rules) {
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		const firewallApiUrl = new URL(`${getRootApiURL}zones/${zoneId}/firewall/rules`);
+		const firewallApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/firewall/rules`);
 
-		const response = await request(firewallApiUrl.toString(), 'POST', rules);
+		const response = await request(firewallApiUrl.toString(), 'POST', [rules]);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -34,7 +34,7 @@ class Firewall extends Parent {
 	static async delete(zone, firewallId) {
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		const firewallApiUrl = `${getRootApiURL}zones/${zoneId}/firewall/rules/${firewallId}`;
+		const firewallApiUrl = `${getRootApiURL()}zones/${zoneId}/firewall/rules/${firewallId}`;
 
 		const response = await request(firewallApiUrl.toString(), 'DELETE');
 
