@@ -45,9 +45,9 @@ exports.builder = {
 		type: 'string',
 	},
 	zoneName: {
-		default: '',
-		describe: 'A domain name',
-		type: 'string',
+		default: [],
+		describe: 'Array of domain names',
+		type: 'array',
 	},
 };
 exports.handler = async function (argv) {
