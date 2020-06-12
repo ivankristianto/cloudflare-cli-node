@@ -40,7 +40,10 @@ class formatter {
 		const colWidths = fields.split(',').map((field) => columnWidth(field));
 		rows.forEach(function (row) {
 			row.forEach(function (rowField, index) {
-				colWidths[index] = Math.max(colWidths[index], rowField.length + 5);
+				colWidths[index] = Math.min(
+					Math.max(colWidths[index], rowField.toString().length + 5),
+					80,
+				);
 			});
 			table.push(row);
 		});
@@ -73,7 +76,7 @@ class formatter {
 			colWidths[0] = Math.max(colWidths[0], label.length + 5);
 			colWidths[1] =
 				typeof rows[i] === 'string'
-					? Math.max(colWidths[1], rows[i].length + 5)
+					? Math.min(Math.max(colWidths[1], rows[i].length + 5), 100) // Lock to max 100
 					: colWidths[1];
 		});
 
