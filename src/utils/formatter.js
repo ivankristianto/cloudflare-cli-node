@@ -1,6 +1,7 @@
 import Table from 'cli-table3';
 import { map } from 'lodash';
 import log from './logger';
+import columnWidth from './column-width';
 
 class formatter {
 	/**
@@ -32,29 +33,19 @@ class formatter {
 	static toTable(fields, rows) {
 		const table = new Table({
 			head: fields.split(','),
-			colWidths: fields.split(',').map((field) => {
-				switch (field) {
-					case 'id':
-					case 'filter':
-						return 35;
-					case 'type':
-					case 'status':
-						return 10;
-					case 'proxied':
-						return 10;
-					case 'content':
-					case 'expression':
-						return 50;
-					default:
-						return 30;
-				}
-			}),
+			colWidths: fields.split(',').map((field) => columnWidth(field)),
 			wordWrap: true,
 		});
 
+		const colWidths = fields.split(',').map((field) => columnWidth(field));
 		rows.forEach(function (row) {
+			row.forEach(function (rowField, index) {
+				colWidths[index] = Math.max(colWidths[index], rowField.length + 5);
+			});
 			table.push(row);
 		});
+
+		table.options.colWidths = colWidths;
 
 		log.success(table.toString());
 	}
@@ -68,17 +59,25 @@ class formatter {
 	static toList(fields, rows) {
 		const table = new Table({
 			head: ['Field', 'Value'],
-			colWidths: [20, 80],
 			wordWrap: true,
 		});
 
 		const labels = fields.split(',');
-
+		const colWidths = [20, 20];
 		labels.forEach(function (label, i) {
 			const row = {};
 			row[label] = rows[i];
 			table.push(row);
+
+			// Count column width
+			colWidths[0] = Math.max(colWidths[0], label.length + 5);
+			colWidths[1] =
+				typeof rows[i] === 'string'
+					? Math.max(colWidths[1], rows[i].length + 5)
+					: colWidths[1];
 		});
+
+		table.options.colWidths = colWidths;
 
 		log.success(table.toString());
 	}
@@ -130,13 +129,25 @@ class formatter {
 	 * @returns {Array}
 	 */
 	static mappingFields(fields, results) {
-		const truncate = (input) => (input.length > 70 ? `${input.substring(0, 70)}...` : input);
+		const truncate = (input) => {
+			return input.length > 70 ? `${input.substring(0, 70)}...` : input;
+		};
 
 		return map(results, function (item) {
 			const output = [];
 
 			fields.split(',').forEach(function (field) {
-				output.push(typeof item[field] === 'undefined' ? '' : truncate(item[field]));
+				let value = item[field];
+
+				if (Array.isArray(item[field])) {
+					value = item[field].join(',');
+				}
+
+				if (typeof item[field] === 'string') {
+					value = truncate(item[field]);
+				}
+
+				output.push(typeof item[field] === 'undefined' ? '' : value.toString());
 			});
 
 			return output;

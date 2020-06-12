@@ -7,7 +7,7 @@ exports.desc = 'List, search, sort, and filter your zones';
 exports.builder = {
 	...formatter.commandArgs(),
 	fields: {
-		default: 'id,name,status',
+		default: 'id,name,status,name_servers',
 		describe: 'Fields to return',
 		type: 'string',
 	},

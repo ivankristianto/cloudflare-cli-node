@@ -34,21 +34,7 @@ exports.handler = async function (argv) {
 
 		const results = formatter.mappingField(fields, response.result);
 
-		switch (format) {
-			case 'json':
-				formatter.toJson(results);
-				break;
-			case 'string':
-				formatter.toString(results, separator);
-				break;
-			case 'list':
-				formatter.toList(fields, results);
-				break;
-			case 'table':
-			default:
-				formatter.toTable(fields, [results]);
-				break;
-		}
+		formatter.output({ fields, format, separator, results });
 	} catch (err) {
 		log.error(err);
 	}
