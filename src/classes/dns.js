@@ -6,42 +6,6 @@ import request, { requestAsText, requestWithFormData } from '../utils/request';
 
 class DNS extends Parent {
 	/**
-	 * List DNS Records of a Zone
-	 *
-	 * @param {Array} args Arguments to pass to request string
-	 * @returns {Promise<*>}
-	 */
-	static async list(args = {}) {
-		const { type = '', name = '', content = '' } = args;
-		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
-		const zoneId = maybeZoneId || args.zone;
-
-		let dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records`);
-
-		if (type) {
-			dnsRecordsApiUrl.searchParams.append('type', type);
-		}
-
-		if (name) {
-			dnsRecordsApiUrl.searchParams.append('name', name);
-		}
-
-		if (content) {
-			dnsRecordsApiUrl.searchParams.append('content', content);
-		}
-
-		dnsRecordsApiUrl = DNS.optionalParams(dnsRecordsApiUrl, args);
-
-		const response = await request(dnsRecordsApiUrl.toString());
-
-		if (response.success !== true) {
-			throw new Error(response.errors[0].message);
-		}
-
-		return response;
-	}
-
-	/**
 	 * Create a DNS Records for a Zone
 	 *
 	 * @param {Array} args Arguments to pass to request string
@@ -77,9 +41,11 @@ class DNS extends Parent {
 	 * @returns {Promise<*>}
 	 */
 	static async delete(args = {}) {
-		const { recordId = '' } = args;
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
 		const zoneId = maybeZoneId || args.zone;
+
+		const maybeRecordId = await DNS.convertRecordNameToId(zoneId, args.record);
+		const recordId = maybeRecordId || args.record;
 
 		const dnsRecordsApiUrl = new URL(
 			`${getRootApiURL()}zones/${zoneId}/dns_records/${recordId}`,
@@ -110,6 +76,32 @@ class DNS extends Parent {
 	}
 
 	/**
+	 * Get DNS Records details
+	 *
+	 * @param {object} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
+	static async get(args = {}) {
+		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
+		const zoneId = maybeZoneId || args.zone;
+
+		const maybeRecordId = await DNS.convertRecordNameToId(zoneId, args.record);
+		const recordId = maybeRecordId || args.record;
+
+		const dnsRecordsApiUrl = new URL(
+			`${getRootApiURL()}zones/${zoneId}/dns_records/${recordId}`,
+		);
+
+		const response = await request(dnsRecordsApiUrl.toString());
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
+
+	/**
 	 * Bulk Import DNS Records for a Zone from a txt file
 	 *
 	 * @param {object} args Arguments to pass to request string
@@ -131,6 +123,42 @@ class DNS extends Parent {
 		formData.append('proxied', proxied.toString());
 
 		const response = await requestWithFormData(dnsRecordsApiUrl.toString(), 'POST', formData);
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
+
+	/**
+	 * List DNS Records of a Zone
+	 *
+	 * @param {object} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
+	static async list(args = {}) {
+		const { type = '', name = '', content = '' } = args;
+		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
+		const zoneId = maybeZoneId || args.zone;
+
+		let dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records`);
+
+		if (type) {
+			dnsRecordsApiUrl.searchParams.append('type', type);
+		}
+
+		if (name) {
+			dnsRecordsApiUrl.searchParams.append('name', name);
+		}
+
+		if (content) {
+			dnsRecordsApiUrl.searchParams.append('content', content);
+		}
+
+		dnsRecordsApiUrl = DNS.optionalParams(dnsRecordsApiUrl, args);
+
+		const response = await request(dnsRecordsApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);

@@ -32,15 +32,7 @@ exports.handler = async function (argv) {
 
 		const response = await Firewall.get(zone, firewallId);
 
-		const results = [];
-
-		fields.split(',').forEach((field) => {
-			if (field === 'filter') {
-				results.push(response.result[field].id);
-				return;
-			}
-			results.push(response.result[field]);
-		});
+		const results = formatter.mappingField(fields, response.result);
 
 		switch (format) {
 			case 'json':

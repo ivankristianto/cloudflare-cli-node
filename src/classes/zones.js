@@ -158,6 +158,29 @@ class Zones extends Parent {
 
 		return response;
 	}
+
+	/**
+	 * Get details of a zone of the string given
+	 *
+	 * @param {string} zone Maybe Zone ID or Zone Name
+	 * @param {string} setting Setting to set
+	 * @param {object} args Setting args
+	 * @returns {Promise<*>}
+	 */
+	static async setSettings(zone, setting, args) {
+		const maybeZoneId = await Zones.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
+
+		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/settings/${setting}`);
+
+		const response = await request(zonesApiUrl.toString(), 'PATCH', args);
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
 }
 
 export default Zones;

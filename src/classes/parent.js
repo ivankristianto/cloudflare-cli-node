@@ -84,6 +84,32 @@ class Parent {
 
 		return false;
 	}
+
+	/**
+	 * Convert Record Name to Record ID
+	 *
+	 * @param {string} zoneId Zone ID
+	 * @param {string} recordName Record Name
+	 * @returns {string|boolean} Return zone id or false if zone name is not found.
+	 */
+	static async convertRecordNameToId(zoneId, recordName) {
+		// zoneId is a domain, need to change to zone id.
+		let dnsListResponseString = await execSync(
+			`cf dns list ${zoneId} --name=${recordName} --fields=id`,
+		);
+
+		if (!dnsListResponseString) {
+			throw new Error('DNS Record not found');
+		}
+
+		dnsListResponseString = dnsListResponseString.toString();
+		// our child process return error
+		if (!dnsListResponseString.includes('Error') && dnsListResponseString.length > 0) {
+			return dnsListResponseString.trim();
+		}
+
+		return false;
+	}
 }
 
 export default Parent;

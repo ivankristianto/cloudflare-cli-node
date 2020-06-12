@@ -47,7 +47,13 @@ exports.handler = async function (argv) {
 
 		const response = await DNS.create(requestArgs);
 
-		formatter.toJson(response.result);
+		log.success(`\nDNS record ${name} successfully created`);
+
+		const fields = 'id,name,type,content,proxied';
+
+		const results = formatter.mappingField(fields, response.result);
+
+		formatter.toTable(fields, [results]);
 	} catch (err) {
 		log.error(err);
 	}

@@ -5,6 +5,10 @@ import formatter from '../../../utils/formatter';
 exports.command = 'minify <zone>';
 exports.desc = 'Get zone minify settings';
 exports.builder = {
+	value: {
+		describe: 'Set the value, in json format',
+		type: 'string',
+	},
 	fields: {
 		default: 'css,html,js',
 		describe: 'Fields to return',
@@ -23,8 +27,17 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, format, separator, zone } = argv;
-		const response = await Zones.getSettings(zone, 'minify');
+		const { fields, format, separator, value, zone } = argv;
+		let requestArgs = {};
+		let response = {};
+
+		if (value) {
+			requestArgs = { value: JSON.parse(value) };
+			response = await Zones.setSettings(zone, 'minify', requestArgs);
+			log.success('\nMinify settings update successfully. New settings:');
+		} else {
+			response = await Zones.getSettings(zone, 'minify');
+		}
 
 		const results = [];
 

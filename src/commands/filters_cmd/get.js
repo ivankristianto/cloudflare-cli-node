@@ -11,8 +11,8 @@ exports.builder = {
 		type: 'string',
 	},
 	format: {
-		default: 'table',
-		describe: 'Format the output, value: table, string, json',
+		default: 'list',
+		describe: 'Format the output, value: table, string, json, list',
 		type: 'string',
 	},
 	separator: {
@@ -40,6 +40,9 @@ exports.handler = async function (argv) {
 				break;
 			case 'string':
 				formatter.toString(results, separator);
+				break;
+			case 'list':
+				formatter.toList(fields, results);
 				break;
 			case 'table':
 			default:

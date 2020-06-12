@@ -1,4 +1,3 @@
-import { map } from 'lodash';
 import DNS from '../../classes/dns';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
@@ -19,6 +18,14 @@ exports.builder = {
 	separator: {
 		default: ' ',
 		describe: 'Separator value when the output format is string',
+		type: 'string',
+	},
+	content: {
+		describe: 'DNS record content, ex: 1.1.1.1',
+		type: 'string',
+	},
+	name: {
+		describe: 'DNS record name, ex: sub1.example.com',
 		type: 'string',
 	},
 	perPage: {
@@ -54,26 +61,30 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, separator, perPage, page, order, direction, status, type, zone } = argv;
+		const {
+			fields,
+			separator,
+			perPage,
+			page,
+			order,
+			content,
+			direction,
+			name,
+			status,
+			type,
+			zone,
+		} = argv;
 		let { format } = argv;
 
 		if (fields === 'id') {
 			format = 'string';
 		}
 
-		const requestArgs = { zone, perPage, page, order, direction, status, type };
+		const requestArgs = { zone, perPage, page, order, content, direction, name, status, type };
 
 		const response = await DNS.list(requestArgs);
 
-		const results = map(response.result, function (item) {
-			const output = [];
-
-			fields.split(',').forEach(function (field) {
-				output.push(item[field] ? item[field] : '');
-			});
-
-			return output;
-		});
+		const results = formatter.mappingFields(fields, response.result);
 
 		switch (format) {
 			case 'json':

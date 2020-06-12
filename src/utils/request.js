@@ -21,7 +21,7 @@ async function requestInterface(url, method = 'GET', body = null, headersOpt = {
 
 	const opts = { method, headers: { ...headers, ...defaultHeaders() } };
 
-	if (method === 'POST' || method === 'PUT') {
+	if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
 		opts.body = JSON.stringify(body);
 	}
 
