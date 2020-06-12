@@ -4,6 +4,26 @@ import log from './logger';
 
 class formatter {
 	/**
+	 * Command Builder argument params
+	 *
+	 * @returns {{format: {default: string, describe: string, type: string}, separator: {default: string, describe: string, type: string}}}
+	 */
+	static commandArgs() {
+		return {
+			format: {
+				default: 'table',
+				describe: 'Format the output, value: table, string, json, list',
+				type: 'string',
+			},
+			separator: {
+				default: ' ',
+				describe: 'Separator value when the output format is string',
+				type: 'string',
+			},
+		};
+	}
+
+	/**
 	 * Format the output with table format
 	 *
 	 * @param {string} fields Table head, comma separated
@@ -15,12 +35,15 @@ class formatter {
 			colWidths: fields.split(',').map((field) => {
 				switch (field) {
 					case 'id':
+					case 'filter':
 						return 35;
 					case 'type':
+					case 'status':
 						return 10;
 					case 'proxied':
 						return 10;
 					case 'content':
+					case 'expression':
 						return 50;
 					default:
 						return 30;
@@ -44,7 +67,7 @@ class formatter {
 	 */
 	static toList(fields, rows) {
 		const table = new Table({
-			style: { border: [], header: [] },
+			head: ['Field', 'Value'],
 			colWidths: [20, 80],
 			wordWrap: true,
 		});
@@ -77,6 +100,26 @@ class formatter {
 	 */
 	static toJson(rows) {
 		log.success(JSON.stringify(rows));
+	}
+
+	static output(args) {
+		const { fields, format, separator, results } = args;
+
+		switch (format) {
+			case 'json':
+				formatter.toJson(results);
+				break;
+			case 'string':
+				formatter.toString(results, separator);
+				break;
+			case 'list':
+				formatter.toList(fields, results);
+				break;
+			case 'table':
+			default:
+				formatter.toTable(fields, results);
+				break;
+		}
 	}
 
 	/**

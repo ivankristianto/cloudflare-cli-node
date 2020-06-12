@@ -92,7 +92,7 @@ class Zones extends Parent {
 	/**
 	 * List all zones
 	 *
-	 * @param {Array} args Arguments to pass to request string
+	 * @param {object} args Arguments to pass to request string
 	 * @returns {Promise<*>}
 	 */
 	static async list(args = {}) {
