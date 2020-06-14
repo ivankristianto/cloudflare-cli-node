@@ -2,6 +2,7 @@ import Table from 'cli-table3';
 import { map } from 'lodash';
 import log from './logger';
 import columnWidth from './column-width';
+import getDeep from './getDeep';
 
 class formatter {
 	/**
@@ -174,10 +175,21 @@ class formatter {
 	static mappingField(fields, result) {
 		const results = [];
 		fields.split(',').forEach((field) => {
+			if (field.includes('.')) {
+				const deepValue = getDeep(result, field);
+				results.push(deepValue);
+				return;
+			}
 			if (field === 'filter') {
 				results.push(result[field].id);
 				return;
 			}
+
+			if (Array.isArray(result[field])) {
+				results.push(result[field].join(','));
+				return;
+			}
+
 			results.push(typeof result[field] === 'undefined' ? '' : result[field]);
 		});
 

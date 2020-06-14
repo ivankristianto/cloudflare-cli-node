@@ -7,7 +7,7 @@ exports.desc = 'Get zone details';
 exports.builder = {
 	...formatter.commandArgs(),
 	fields: {
-		default: 'id,name,status,name_servers',
+		default: 'id,name,status,account.id,account.name,name_servers',
 		describe: 'Fields to return',
 		type: 'string',
 	},
