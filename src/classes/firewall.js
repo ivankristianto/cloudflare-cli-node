@@ -1,8 +1,6 @@
-import Parent from './parent';
-import { getRootApiURL } from '../utils/config';
-import request from '../utils/request';
+import Cloudflare from './cloudflare';
 
-class Firewall extends Parent {
+class Firewall extends Cloudflare {
 	/**
 	 * Create a new Firewall Rule
 	 *
@@ -13,9 +11,9 @@ class Firewall extends Parent {
 	static async create(zone, rules) {
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		const firewallApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/firewall/rules`);
+		const firewallApiUrl = Firewall.buildApiURL(`zones/${zoneId}/firewall/rules`);
 
-		const response = await request(firewallApiUrl.toString(), 'POST', [rules]);
+		const response = await Firewall.request(firewallApiUrl.toString(), 'POST', [rules]);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -34,9 +32,9 @@ class Firewall extends Parent {
 	static async delete(zone, firewallId) {
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		const firewallApiUrl = `${getRootApiURL()}zones/${zoneId}/firewall/rules/${firewallId}`;
+		const firewallApiUrl = Firewall.buildApiURL(`zones/${zoneId}/firewall/rules/${firewallId}`);
 
-		const response = await request(firewallApiUrl.toString(), 'DELETE');
+		const response = await Firewall.request(firewallApiUrl.toString(), 'DELETE');
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -55,11 +53,9 @@ class Firewall extends Parent {
 	static async get(zone, firewallId) {
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		const firewallApiUrl = new URL(
-			`${getRootApiURL()}zones/${zoneId}/firewall/rules/${firewallId}`,
-		);
+		const firewallApiUrl = Firewall.buildApiURL(`zones/${zoneId}/firewall/rules/${firewallId}`);
 
-		const response = await request(firewallApiUrl.toString());
+		const response = await Firewall.request(firewallApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -79,7 +75,7 @@ class Firewall extends Parent {
 		const { description = '', perPage = 20, page = 1 } = args;
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		let firewallApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/firewall/rules`);
+		let firewallApiUrl = Firewall.buildApiURL(`zones/${zoneId}/firewall/rules`);
 
 		if (description) {
 			firewallApiUrl.searchParams.append('description', description);
@@ -87,7 +83,7 @@ class Firewall extends Parent {
 
 		firewallApiUrl = Firewall.optionalParams(firewallApiUrl, { perPage, page });
 
-		const response = await request(firewallApiUrl.toString());
+		const response = await Firewall.request(firewallApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);

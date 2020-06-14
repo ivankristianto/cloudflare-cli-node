@@ -3,10 +3,6 @@ import path from 'path';
 import fs from 'fs-extra';
 import log from './logger';
 
-export function getRootApiURL() {
-	return 'https://api.cloudflare.com/client/v4/';
-}
-
 export function getConfigFile() {
 	return path.join(os.homedir(), '.cloudflare-config');
 }

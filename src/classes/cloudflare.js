@@ -1,6 +1,26 @@
 import { execSync } from 'child_process';
+import Request from './request';
 
-class Parent {
+class Cloudflare extends Request {
+	/**
+	 * Get Root API URL
+	 *
+	 * @returns {string}
+	 */
+	static getRootApiUrl() {
+		return 'https://api.cloudflare.com/client/v4';
+	}
+
+	/**
+	 * Build object URL from given urlPath
+	 *
+	 * @param {string} urlPath URL path to concat with root api url
+	 * @returns {URL}
+	 */
+	static buildApiURL(urlPath) {
+		return new URL(`${Cloudflare.getRootApiUrl()}/${urlPath}`);
+	}
+
 	/**
 	 * Add optional params to the url query string.
 	 *
@@ -63,7 +83,7 @@ class Parent {
 	 * @returns {string|boolean} Return zone id or false if zone name is not found.
 	 */
 	static async convertZoneNameToId(zoneName) {
-		if (Parent.isDomain(zoneName)) {
+		if (Cloudflare.isDomain(zoneName)) {
 			// zoneId is a domain, need to change to zone id.
 			let zoneListResponseString = await execSync(
 				`cf zones list --zoneName=${zoneName} --fields=id`,
@@ -112,4 +132,4 @@ class Parent {
 	}
 }
 
-export default Parent;
+export default Cloudflare;

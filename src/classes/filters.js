@@ -1,8 +1,6 @@
-import Parent from './parent';
-import { getRootApiURL } from '../utils/config';
-import request from '../utils/request';
+import Cloudflare from './cloudflare';
 
-class Filters extends Parent {
+class Filters extends Cloudflare {
 	/**
 	 * Delete a Firewall Filter
 	 *
@@ -13,9 +11,9 @@ class Filters extends Parent {
 	static async delete(zone, filterId) {
 		const maybeZoneId = await Filters.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		const filterApiUrl = `${getRootApiURL}zones/${zoneId}/filters/${filterId}`;
+		const filterApiUrl = Filters.buildApiURL(`zones/${zoneId}/filters/${filterId}`);
 
-		const response = await request(filterApiUrl.toString(), 'DELETE');
+		const response = await Filters.request(filterApiUrl.toString(), 'DELETE');
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -34,9 +32,9 @@ class Filters extends Parent {
 	static async get(zone, filterId) {
 		const maybeZoneId = await Filters.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		const filterApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/filters/${filterId}`);
+		const filterApiUrl = Filters.buildApiURL(`zones/${zoneId}/filters/${filterId}`);
 
-		const response = await request(filterApiUrl.toString());
+		const response = await Filters.request(filterApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -55,11 +53,11 @@ class Filters extends Parent {
 	static async list(zone, args = {}) {
 		const maybeZoneId = await Filters.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
-		let filterApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/filters`);
+		let filterApiUrl = Filters.buildApiURL(`zones/${zoneId}/filters`);
 
 		filterApiUrl = Filters.optionalParams(filterApiUrl, args);
 
-		const response = await request(filterApiUrl.toString());
+		const response = await Filters.request(filterApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -84,8 +82,8 @@ class Filters extends Parent {
 		const filterResponse = await Filters.get(zone, filterId);
 		const filter = { ...filterResponse.result, paused, expression };
 
-		const filterApiUrl = `${getRootApiURL()}zones/${zoneId}/filters/${filterId}`;
-		const response = await request(filterApiUrl.toString(), 'PUT', filter);
+		const filterApiUrl = Filters.buildApiURL(`zones/${zoneId}/filters/${filterId}`);
+		const response = await Filters.request(filterApiUrl.toString(), 'PUT', filter);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);

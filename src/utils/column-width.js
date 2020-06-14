@@ -2,10 +2,12 @@ export default function columnWidth(columnName) {
 	switch (columnName) {
 		case 'type':
 		case 'status':
+		case 'paused':
 		case 'proxied':
 			return 10;
 
 		case 'id':
+		case 'expression':
 		case 'filter':
 			return 35;
 
@@ -14,11 +16,10 @@ export default function columnWidth(columnName) {
 			return 20;
 
 		case 'content':
-		case 'expression':
 		case 'name_servers':
 			return 50;
 
 		default:
-			return 30;
+			return 20;
 	}
 }

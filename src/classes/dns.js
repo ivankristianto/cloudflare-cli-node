@@ -1,10 +1,8 @@
 import fs from 'fs-extra';
 import FormData from 'form-data';
-import Parent from './parent';
-import { getRootApiURL } from '../utils/config';
-import request, { requestAsText, requestWithFormData } from '../utils/request';
+import Cloudflare from './cloudflare';
 
-class DNS extends Parent {
+class DNS extends Cloudflare {
 	/**
 	 * Create a DNS Records for a Zone
 	 *
@@ -23,9 +21,9 @@ class DNS extends Parent {
 			requestArgs.priority = priority;
 		}
 
-		const dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records`);
+		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records`);
 
-		const response = await request(dnsRecordsApiUrl.toString(), 'POST', requestArgs);
+		const response = await DNS.request(dnsRecordsApiUrl.toString(), 'POST', requestArgs);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -47,11 +45,9 @@ class DNS extends Parent {
 		const maybeRecordId = await DNS.convertRecordNameToId(zoneId, args.record);
 		const recordId = maybeRecordId || args.record;
 
-		const dnsRecordsApiUrl = new URL(
-			`${getRootApiURL()}zones/${zoneId}/dns_records/${recordId}`,
-		);
+		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records/${recordId}`);
 
-		const response = await request(dnsRecordsApiUrl.toString(), 'DELETE');
+		const response = await DNS.request(dnsRecordsApiUrl.toString(), 'DELETE');
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -70,9 +66,9 @@ class DNS extends Parent {
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
 		const zoneId = maybeZoneId || args.zone;
 
-		const dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records/export`);
+		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records/export`);
 
-		return requestAsText(dnsRecordsApiUrl.toString());
+		return DNS.requestAsText(dnsRecordsApiUrl.toString());
 	}
 
 	/**
@@ -88,11 +84,9 @@ class DNS extends Parent {
 		const maybeRecordId = await DNS.convertRecordNameToId(zoneId, args.record);
 		const recordId = maybeRecordId || args.record;
 
-		const dnsRecordsApiUrl = new URL(
-			`${getRootApiURL()}zones/${zoneId}/dns_records/${recordId}`,
-		);
+		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records/${recordId}`);
 
-		const response = await request(dnsRecordsApiUrl.toString());
+		const response = await DNS.request(dnsRecordsApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -112,7 +106,7 @@ class DNS extends Parent {
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
 		const zoneId = maybeZoneId || args.zone;
 
-		const dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records/import`);
+		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records/import`);
 
 		if (!(await fs.pathExists(inputFile))) {
 			throw new Error(`Input File ${inputFile} does not exist`);
@@ -122,7 +116,11 @@ class DNS extends Parent {
 		formData.append('file', fs.createReadStream(inputFile));
 		formData.append('proxied', proxied.toString());
 
-		const response = await requestWithFormData(dnsRecordsApiUrl.toString(), 'POST', formData);
+		const response = await DNS.requestWithFormData(
+			dnsRecordsApiUrl.toString(),
+			'POST',
+			formData,
+		);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -142,7 +140,7 @@ class DNS extends Parent {
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
 		const zoneId = maybeZoneId || args.zone;
 
-		let dnsRecordsApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/dns_records`);
+		let dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records`);
 
 		if (type) {
 			dnsRecordsApiUrl.searchParams.append('type', type);
@@ -158,7 +156,7 @@ class DNS extends Parent {
 
 		dnsRecordsApiUrl = DNS.optionalParams(dnsRecordsApiUrl, args);
 
-		const response = await request(dnsRecordsApiUrl.toString());
+		const response = await DNS.request(dnsRecordsApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);

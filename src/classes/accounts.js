@@ -1,8 +1,6 @@
-import Parent from './parent';
-import { getRootApiURL } from '../utils/config';
-import request from '../utils/request';
+import Cloudflare from './cloudflare';
 
-class Accounts extends Parent {
+class Accounts extends Cloudflare {
 	/**
 	 * Get Accounts Detail
 	 *
@@ -10,9 +8,9 @@ class Accounts extends Parent {
 	 * @returns {Promise<*>}
 	 */
 	static async get(accountId) {
-		const userApiUrl = new URL(`${getRootApiURL()}accounts/${accountId}`);
+		const userApiUrl = Accounts.buildApiURL(`accounts/${accountId}`);
 
-		const response = await request(userApiUrl.toString());
+		const response = await Accounts.request(userApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);

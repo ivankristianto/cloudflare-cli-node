@@ -5,26 +5,22 @@ import formatter from '../../utils/formatter';
 exports.command = 'get <zone> <firewallId>';
 exports.desc = 'Get details of a zone firewall';
 exports.builder = {
+	...formatter.commandArgs(),
 	fields: {
 		default: 'id,description,filter',
 		describe: 'Fields to return',
 		type: 'string',
 	},
 	format: {
-		default: 'table',
-		describe: 'Format the output, value: table, string, json',
-		type: 'string',
-	},
-	separator: {
-		default: ' ',
-		describe: 'Separator value when the output format is string',
+		default: 'list',
+		describe: 'Format the output, value: table, string, json, list',
 		type: 'string',
 	},
 };
 exports.handler = async function (argv) {
 	try {
 		const { fields, firewallId, separator, zone } = argv;
-		let { format } = argv;
+		let { format = 'list' } = argv;
 
 		if (fields === 'id') {
 			format = 'string';
@@ -34,18 +30,12 @@ exports.handler = async function (argv) {
 
 		const results = formatter.mappingField(fields, response.result);
 
-		switch (format) {
-			case 'json':
-				formatter.toJson(results);
-				break;
-			case 'string':
-				formatter.toString(results, separator);
-				break;
-			case 'table':
-			default:
-				formatter.toTable(fields, [results]);
-				break;
-		}
+		formatter.output({
+			fields,
+			format,
+			separator,
+			results: format === 'table' ? [results] : results,
+		});
 	} catch (err) {
 		log.error(err);
 	}

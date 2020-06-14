@@ -1,8 +1,6 @@
-import Parent from './parent';
-import { getRootApiURL } from '../utils/config';
-import request from '../utils/request';
+import Cloudflare from './cloudflare';
 
-class Zones extends Parent {
+class Zones extends Cloudflare {
 	/**
 	 * Create a new Zone
 	 *
@@ -14,9 +12,9 @@ class Zones extends Parent {
 
 		const requestArgs = { account: { id: accountId }, jump_start: jumpStart, name, type };
 
-		const zonesApiUrl = new URL(`${getRootApiURL()}zones`);
+		const zonesApiUrl = Zones.buildApiURL('zones');
 
-		const response = await request(zonesApiUrl.toString(), 'POST', requestArgs);
+		const response = await Zones.request(zonesApiUrl.toString(), 'POST', requestArgs);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -35,9 +33,9 @@ class Zones extends Parent {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
 
-		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}`);
+		const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}`);
 
-		const response = await request(zonesApiUrl.toString(), 'DELETE');
+		const response = await Zones.request(zonesApiUrl.toString(), 'DELETE');
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -56,9 +54,9 @@ class Zones extends Parent {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
 
-		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}`);
+		const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}`);
 
-		const response = await request(zonesApiUrl.toString());
+		const response = await Zones.request(zonesApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -78,9 +76,9 @@ class Zones extends Parent {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
 
-		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/settings/${setting}`);
+		const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}/settings/${setting}`);
 
-		const response = await request(zonesApiUrl.toString());
+		const response = await Zones.request(zonesApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -97,7 +95,7 @@ class Zones extends Parent {
 	 */
 	static async list(args = {}) {
 		const { status = '', zoneName = '' } = args;
-		let zonesApiUrl = new URL(`${getRootApiURL()}zones`);
+		let zonesApiUrl = Zones.buildApiURL('zones');
 
 		if (zoneName) {
 			zonesApiUrl.searchParams.append('name', zoneName);
@@ -109,7 +107,7 @@ class Zones extends Parent {
 
 		zonesApiUrl = Zones.optionalParams(zonesApiUrl, args);
 
-		const response = await request(zonesApiUrl.toString());
+		const response = await Zones.request(zonesApiUrl.toString());
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -130,7 +128,7 @@ class Zones extends Parent {
 
 		const zoneId = maybeZoneId || zone;
 
-		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/purge_cache`);
+		const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}/purge_cache`);
 
 		const requestArgs = {};
 
@@ -150,7 +148,7 @@ class Zones extends Parent {
 			requestArgs.hosts = hosts;
 		}
 
-		const response = await request(zonesApiUrl.toString(), 'POST', requestArgs);
+		const response = await Zones.request(zonesApiUrl.toString(), 'POST', requestArgs);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -171,9 +169,9 @@ class Zones extends Parent {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
 		const zoneId = maybeZoneId || zone;
 
-		const zonesApiUrl = new URL(`${getRootApiURL()}zones/${zoneId}/settings/${setting}`);
+		const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}/settings/${setting}`);
 
-		const response = await request(zonesApiUrl.toString(), 'PATCH', args);
+		const response = await Zones.request(zonesApiUrl.toString(), 'PATCH', args);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
