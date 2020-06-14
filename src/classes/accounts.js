@@ -18,6 +18,26 @@ class Accounts extends Cloudflare {
 
 		return response;
 	}
+
+	/**
+	 * Get Accounts List
+	 *
+	 * @param {object} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
+	static async list(args) {
+		let userApiUrl = Accounts.buildApiURL('accounts');
+
+		userApiUrl = Accounts.optionalParams(userApiUrl, args);
+
+		const response = await Accounts.request(userApiUrl.toString());
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
 }
 
 export default Accounts;

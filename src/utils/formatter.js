@@ -12,7 +12,6 @@ class formatter {
 	static commandArgs() {
 		return {
 			format: {
-				default: 'table',
 				describe: 'Format the output, value: table, string, json, list',
 				type: 'string',
 			},
@@ -67,16 +66,18 @@ class formatter {
 
 		const labels = fields.split(',');
 		const colWidths = [20, 20];
+		const results = rows.flat(1);
+
 		labels.forEach(function (label, i) {
 			const row = {};
-			row[label] = rows[i];
+			row[label] = results[i];
 			table.push(row);
 
 			// Count column width
 			colWidths[0] = Math.max(colWidths[0], label.length + 5);
 			colWidths[1] =
-				typeof rows[i] === 'string'
-					? Math.min(Math.max(colWidths[1], rows[i].length + 5), 100) // Lock to max 100
+				typeof results[i] === 'string'
+					? Math.min(Math.max(colWidths[1], results[i].length + 5), 100) // Lock to max 100
 					: colWidths[1];
 		});
 
@@ -104,8 +105,14 @@ class formatter {
 		log.success(JSON.stringify(rows));
 	}
 
-	static output(args) {
-		const { fields, format, separator, results } = args;
+	/**
+	 * Display the output based on given arguments
+	 *
+	 * @param {Array} results Result to display
+	 * @param {object} args Arguments to show the output
+	 */
+	static output(results, args) {
+		const { fields, format, separator } = args;
 
 		switch (format) {
 			case 'json':

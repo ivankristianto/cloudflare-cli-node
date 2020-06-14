@@ -17,7 +17,10 @@ exports.handler = async function (argv) {
 
 		const response = await DNS.import({ inputFile, zone });
 
-		formatter.toJson(response.result);
+		const fields = 'recs_added,total_records_parsed';
+		const results = formatter.mappingField(fields, response.result);
+
+		formatter.toList(fields, results);
 		log.success(`DNS records imported successfully`);
 	} catch (err) {
 		log.error(err);

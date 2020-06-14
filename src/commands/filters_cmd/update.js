@@ -5,6 +5,7 @@ import formatter from '../../utils/formatter';
 exports.command = 'update <zone> <filterId>';
 exports.desc = 'Update a single filter';
 exports.builder = {
+	...formatter.commandArgs(),
 	expression: {
 		describe: 'Filter Expression Rule',
 		type: 'string',
@@ -20,37 +21,21 @@ exports.builder = {
 		describe: 'Fields to return',
 		type: 'string',
 	},
-	format: {
-		default: 'table',
-		describe: 'Format the output, value: table, string, json',
-		type: 'string',
-	},
-	separator: {
-		default: ' ',
-		describe: 'Separator value when the output format is string',
-		type: 'string',
-	},
 };
 exports.handler = async function (argv) {
 	try {
-		const { description, expression, paused, fields, format, filterId, separator, zone } = argv;
+		const { description, expression, paused, fields, filterId, separator, zone } = argv;
+		let { format = 'list' } = argv;
+
+		if (fields === 'id') {
+			format = 'string';
+		}
 		const requestArgs = { description, expression, paused };
 		const response = await Filters.update(zone, filterId, requestArgs);
 
 		const results = formatter.mappingField(fields, response.result);
 
-		switch (format) {
-			case 'json':
-				formatter.toJson(results);
-				break;
-			case 'string':
-				formatter.toString(results, separator);
-				break;
-			case 'table':
-			default:
-				formatter.toTable(fields, [results]);
-				break;
-		}
+		formatter.output([results], { fields, format, separator });
 	} catch (err) {
 		log.error(err);
 	}

@@ -5,6 +5,7 @@ import formatter from '../../../utils/formatter';
 exports.command = 'minify <zone>';
 exports.desc = 'Get zone minify settings';
 exports.builder = {
+	...formatter.commandArgs(),
 	value: {
 		describe: 'Set the value, in json format',
 		type: 'string',
@@ -12,16 +13,6 @@ exports.builder = {
 	fields: {
 		default: 'css,html,js',
 		describe: 'Fields to return',
-		type: 'string',
-	},
-	format: {
-		default: 'table',
-		describe: 'Format the output, value: table, string, json',
-		type: 'string',
-	},
-	separator: {
-		default: ' ',
-		describe: 'Separator value when the output format is string',
 		type: 'string',
 	},
 };
@@ -39,24 +30,13 @@ exports.handler = async function (argv) {
 			response = await Zones.getSettings(zone, 'minify');
 		}
 
-		const results = [];
+		const results = formatter.mappingField(fields, response.result.value);
 
-		fields.split(',').forEach((field) => {
-			results.push(response.result.value[field]);
+		formatter.output([results], {
+			fields,
+			format,
+			separator,
 		});
-
-		switch (format) {
-			case 'json':
-				formatter.toJson(results);
-				break;
-			case 'string':
-				formatter.toString(results, separator);
-				break;
-			case 'table':
-			default:
-				formatter.toTable(fields, [results]);
-				break;
-		}
 	} catch (err) {
 		log.error(err);
 	}

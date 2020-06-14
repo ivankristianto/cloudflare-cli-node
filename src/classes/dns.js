@@ -6,10 +6,10 @@ class DNS extends Cloudflare {
 	/**
 	 * Create a DNS Records for a Zone
 	 *
-	 * @param {Array} args Arguments to pass to request string
+	 * @param {object} args Arguments to pass to request string
 	 * @returns {Promise<*>}
 	 */
-	static async create(args = {}) {
+	static async create(args) {
 		const { type = 'A', name = '', content = '', ttl = 1, proxied = true, priority = 0 } = args;
 
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
@@ -35,10 +35,10 @@ class DNS extends Cloudflare {
 	/**
 	 * Delete a DNS Records for a Zone
 	 *
-	 * @param {Array} args Arguments to pass to request string
+	 * @param {object} args Arguments to pass to request string
 	 * @returns {Promise<*>}
 	 */
-	static async delete(args = {}) {
+	static async delete(args) {
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
 		const zoneId = maybeZoneId || args.zone;
 
@@ -77,7 +77,7 @@ class DNS extends Cloudflare {
 	 * @param {object} args Arguments to pass to request string
 	 * @returns {Promise<*>}
 	 */
-	static async get(args = {}) {
+	static async get(args) {
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
 		const zoneId = maybeZoneId || args.zone;
 

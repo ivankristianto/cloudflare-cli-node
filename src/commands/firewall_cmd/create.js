@@ -5,6 +5,7 @@ import formatter from '../../utils/formatter';
 exports.command = 'create <zone>';
 exports.desc = 'Create a new firewall rule';
 exports.builder = {
+	...formatter.commandArgs(),
 	filterId: {
 		describe: 'Filter id to apply to this rule',
 		type: 'string',
@@ -41,16 +42,6 @@ exports.builder = {
 		describe: 'Fields to return',
 		type: 'string',
 	},
-	format: {
-		default: 'table',
-		describe: 'Format the output, value: table, string, json',
-		type: 'string',
-	},
-	separator: {
-		default: ' ',
-		describe: 'Separator value when the output format is string',
-		type: 'string',
-	},
 };
 exports.handler = async function (argv) {
 	try {
@@ -64,7 +55,7 @@ exports.handler = async function (argv) {
 			ref,
 			zone,
 			fields,
-			format,
+			format = 'list',
 			separator,
 		} = argv;
 
@@ -97,18 +88,8 @@ exports.handler = async function (argv) {
 
 		const results = formatter.mappingField(fields, response.result[0]);
 
-		switch (format) {
-			case 'json':
-				formatter.toJson(results);
-				break;
-			case 'string':
-				formatter.toString(results, separator);
-				break;
-			case 'table':
-			default:
-				formatter.toTable(fields, [results]);
-				break;
-		}
+		formatter.output([results], { fields, format, separator });
+		log.success('Firewall created successfully!');
 	} catch (err) {
 		log.error(err);
 	}

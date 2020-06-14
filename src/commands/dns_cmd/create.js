@@ -5,6 +5,12 @@ import formatter from '../../utils/formatter';
 exports.command = 'create <zone>';
 exports.desc = 'Create a dns record for a zone';
 exports.builder = {
+	...formatter.commandArgs(),
+	fields: {
+		default: 'id,type,name,content,proxied,ttl',
+		describe: 'Fields to return',
+		type: 'string',
+	},
 	type: {
 		default: 'A',
 		describe: 'DNS record type, default A',
@@ -41,19 +47,20 @@ exports.builder = {
 };
 exports.handler = async function (argv) {
 	try {
-		const { type, name, content, ttl, proxied, priority, zone } = argv;
+		const { fields, type, name, content, ttl, proxied, priority, separator, zone } = argv;
+		let { format = 'list' } = argv;
+
+		if (fields === 'id') {
+			format = 'string';
+		}
 
 		const requestArgs = { type, name, content, ttl, proxied, priority, zone };
-
 		const response = await DNS.create(requestArgs);
-
-		log.success(`\nDNS record ${name} successfully created`);
-
-		const fields = 'id,name,type,content,proxied';
 
 		const results = formatter.mappingField(fields, response.result);
 
-		formatter.toTable(fields, [results]);
+		formatter.output([results], { fields, format, separator });
+		log.success(`\nDNS record ${name} successfully created`);
 	} catch (err) {
 		log.error(err);
 	}

@@ -43,7 +43,7 @@ exports.builder = {
 exports.handler = async function (argv) {
 	try {
 		const { fields, separator, perPage, page, order, direction, status, zoneName } = argv;
-		let { format } = argv;
+		let { format = 'table' } = argv;
 
 		if (fields === 'id') {
 			format = 'string';
@@ -63,7 +63,7 @@ exports.handler = async function (argv) {
 
 		const results = formatter.mappingFields(fields, response.result);
 
-		formatter.output({ fields, format, separator, results });
+		formatter.output(results, { fields, format, separator });
 	} catch (err) {
 		log.error(err);
 	}

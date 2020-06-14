@@ -34,7 +34,7 @@ exports.handler = async function (argv) {
 
 		const results = formatter.mappingField(fields, response.result);
 
-		formatter.output({ fields, format, separator, results });
+		formatter.output([results], { fields, format, separator });
 	} catch (err) {
 		log.error(err);
 	}
