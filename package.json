@@ -1,5 +1,5 @@
 {
-  "name": "cloudflare-api",
+  "name": "@ivankristianto/cloudflare-cli",
   "version": "0.0.1",
   "description": "Cloudflare API CLI Interface with Node.js",
   "bin": {
