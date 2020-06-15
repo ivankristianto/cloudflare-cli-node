@@ -1,7 +1,7 @@
 {
   "name": "cloudflare-api",
-  "version": "1.0.0",
-  "description": "Cloudflare API Node.js Interface",
+  "version": "0.0.1",
+  "description": "Cloudflare API CLI Interface with Node.js",
   "bin": {
     "cf": "bin/cf"
   },
