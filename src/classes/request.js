@@ -37,7 +37,7 @@ class Request {
 	static async requestAsText(url, method = 'GET', body = null, headersOpt = {}) {
 		const response = await Request.requestInterface(url, method, body, headersOpt);
 
-		if (response === false) {
+		if (response === false || !response.ok) {
 			return response;
 		}
 
@@ -62,7 +62,7 @@ class Request {
 	static async request(url, method = 'GET', body = null, headersOpt = {}) {
 		const response = await Request.requestInterface(url, method, body, headersOpt);
 
-		if (response === false) {
+		if (response === false || !response.ok) {
 			return response;
 		}
 
