@@ -8,7 +8,7 @@ class formatter {
 	/**
 	 * Command Builder argument params
 	 *
-	 * @returns {{format: {default: string, describe: string, type: string}, separator: {default: string, describe: string, type: string}}}
+	 * @returns {{format: {describe: string, type: string}, separator: {default: string, describe: string, type: string}}}
 	 */
 	static commandArgs() {
 		return {
@@ -150,6 +150,10 @@ class formatter {
 			fields.split(',').forEach(function (field) {
 				let value = item[field];
 
+				if (value === null) {
+					value = 'null';
+				}
+
 				if (Array.isArray(item[field])) {
 					value = item[field].join(',');
 				}
@@ -180,6 +184,7 @@ class formatter {
 				results.push(deepValue);
 				return;
 			}
+
 			if (field === 'filter') {
 				results.push(result[field].id);
 				return;
@@ -190,7 +195,13 @@ class formatter {
 				return;
 			}
 
-			results.push(typeof result[field] === 'undefined' ? '' : result[field]);
+			let value = result[field];
+
+			if (value === null) {
+				value = 'null';
+			}
+
+			results.push(typeof value === 'undefined' ? '' : value);
 		});
 
 		return results;
