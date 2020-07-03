@@ -57,6 +57,10 @@ cf firewall list <zone> --description=<description>
 
 ## Filters:
 
+### Create
+cf filters create <zone> --expressions {\"expression\":\"ip.src eq 93.184.216.0\"}
+cf filters create <zone> --expressions {\"expression\":\""$(cat ~/path/rules.txt)"\"}
+
 ### Delete
 cf filters delete <zone> <filterId>
 
@@ -116,5 +120,9 @@ cf zones settings minify <zone> --value {\"css\":\"on\", \"html\":\"on\", \"js\"
 cf zones settings minify <zone>
 
 #### Development Mode
-cf zones settings devmode <zone> --value=off
+cf zones settings devmode <zone> --value=off/on
 cf zones settings devmode <zone>
+
+#### Always Use HTTPS Setting
+cf zones settings always_use_https <zone> --value=off/on
+cf zones settings always_use_https <zone>

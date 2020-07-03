@@ -30,6 +30,7 @@ exports.handler = async function (argv) {
 		if (fields === 'id') {
 			format = 'string';
 		}
+
 		const requestArgs = { description, expression, paused };
 		const response = await Filters.update(zone, filterId, requestArgs);
 

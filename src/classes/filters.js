@@ -2,6 +2,28 @@ import Cloudflare from './cloudflare';
 
 class Filters extends Cloudflare {
 	/**
+	 * Update a single filter
+	 *
+	 * @param {string} zone Zone ID or Zone Name
+	 * @param {object} args Filter object
+	 * @returns {Promise<*>}
+	 */
+	static async create(zone, args) {
+		const { expressions } = args;
+		const maybeZoneId = await Filters.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
+
+		const filterApiUrl = Filters.buildApiURL(`zones/${zoneId}/filters`);
+		const response = await Filters.request(filterApiUrl.toString(), 'POST', expressions);
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
+
+	/**
 	 * Delete a Firewall Filter
 	 *
 	 * @param {string} zone Zone ID or Zone Name

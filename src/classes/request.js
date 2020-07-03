@@ -62,7 +62,7 @@ class Request {
 	static async request(url, method = 'GET', body = null, headersOpt = {}) {
 		const response = await Request.requestInterface(url, method, body, headersOpt);
 
-		if (response === false || !response.ok) {
+		if (response === false) {
 			return response;
 		}
 
