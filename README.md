@@ -2,6 +2,8 @@
 
 > This package allows you to manage your Cloudflare Accounts through cli interface.
 
+![Build and Test](https://github.com/ivankristianto/cloudflare-cli-node/workflows/Build%20and%20Test/badge.svg) [![Release Version](https://img.shields.io/github/release/ivankristianto/cloudflare-cli-node.svg)](https://github.com/ivankristianto/cloudflare-cli-node/releases/latest) [![MIT License](https://img.shields.io/github/license/ivankristianto/cloudflare-cli-node.svg)](https://github.com/ivankristianto/cloudflare-cli-node/blob/master/LICENSE)
+
 ## Requirements
 
 * Node.js 10 or above
