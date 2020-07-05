@@ -3,52 +3,56 @@ import path from 'path';
 import fs from 'fs-extra';
 import log from './logger';
 
-export function getConfigFile() {
-	return path.join(os.homedir(), '.cloudflare-config');
-}
-
-export function defaultConfig() {
-	return {
-		apiToken: '',
-	};
-}
-
-export async function write(config) {
-	await fs.writeJson(getConfigFile(), config);
-}
-
-export async function read() {
-	let readConfig = {};
-
-	if (await fs.exists(getConfigFile())) {
-		readConfig = await fs.readJson(getConfigFile());
+class Config {
+	static getConfigFile() {
+		return path.join(os.homedir(), '.cloudflare-config');
 	}
 
-	return { ...readConfig };
-}
-
-export async function get(key) {
-	const defaults = defaultConfig();
-	const config = await read();
-
-	return typeof config[key] === 'undefined' ? defaults[key] : config[key];
-}
-
-export async function set(key, value) {
-	const config = await read();
-
-	config[key] = value;
-
-	await write(config);
-}
-
-export async function getAuthToken() {
-	const token = await get('apiToken');
-
-	if (!token) {
-		log.warning('Please run cf config setup');
-		return false;
+	static defaultConfig() {
+		return {
+			apiToken: '',
+		};
 	}
 
-	return token;
+	static async write(config) {
+		await fs.writeJson(Config.getConfigFile(), config);
+	}
+
+	static async read() {
+		let readConfig = {};
+
+		if (await fs.exists(Config.getConfigFile())) {
+			readConfig = await fs.readJson(Config.getConfigFile());
+		}
+
+		return { ...readConfig };
+	}
+
+	static async get(key) {
+		const defaults = Config.defaultConfig();
+		const config = await Config.read();
+
+		return typeof config[key] === 'undefined' ? defaults[key] : config[key];
+	}
+
+	static async set(key, value) {
+		const config = await Config.read();
+
+		config[key] = value;
+
+		await Config.write(config);
+	}
+
+	static async getAuthToken() {
+		const token = await Config.get('apiToken');
+
+		if (!token) {
+			log.warning('Please run cf config setup');
+			return false;
+		}
+
+		return token;
+	}
 }
+
+export default Config;
