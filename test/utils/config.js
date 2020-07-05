@@ -3,8 +3,7 @@
  */
 import { assert } from 'chai';
 import fs from 'fs-extra';
-import path, { resolve } from 'path';
-import os from 'os';
+import { resolve } from 'path';
 import sinon from 'sinon';
 import temp from 'temp';
 
