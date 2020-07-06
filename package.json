@@ -1,12 +1,13 @@
 {
   "name": "cloudflare-cli-node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cloudflare API CLI Interface with Node.js",
   "bin": {
     "cf": "bin/cf"
   },
   "main": "lib/cli.js",
   "dependencies": {
+    "@babel/runtime": "^7.10.3",
     "chalk": "^4.1.0",
     "cli-table3": "^0.6.0",
     "form-data": "^3.0.0",
@@ -23,7 +24,6 @@
     "@babel/plugin-transform-runtime": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
     "@babel/register": "^7.10.4",
-    "@babel/runtime": "^7.10.3",
     "babel-eslint": "^10.1.0",
     "chai": "^4.2.0",
     "core-js": "^3.6.5",
@@ -64,5 +64,9 @@
     "watch": "npm run clean && cross-env BABEL_ENV=commonjs babel src --watch --out-dir lib"
   },
   "author": "Ivan Kristianto",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ivankristianto/cloudflare-cli-node.git"
+  }
 }

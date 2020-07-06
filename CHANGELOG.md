@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](https://keepachangelog.com/).
 
+## [0.1.1] - 2020-07-06
+
+### Fixed
+- Fix issue with babel/runtime on Windows env
+
 ## [0.1.0] - 2020-07-06
 
 ### Fixed
