@@ -68,5 +68,12 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:ivankristianto/cloudflare-cli-node.git"
+  },
+  "keywords": [
+    "cloudflare",
+    "cli"
+  ],
+  "bugs": {
+    "url": "https://github.com/ivankristianto/cloudflare-cli-node/issues"
   }
 }

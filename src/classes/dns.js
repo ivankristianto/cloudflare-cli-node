@@ -27,8 +27,6 @@ class DNS extends Cloudflare {
 
 		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records`);
 
-		console.log('DEBUG: requestArgs', requestArgs); // eslint-disable-line no-console
-
 		const response = await DNS.request(dnsRecordsApiUrl.toString(), 'POST', requestArgs);
 
 		if (response.success !== true) {
@@ -163,6 +161,42 @@ class DNS extends Cloudflare {
 		dnsRecordsApiUrl = DNS.optionalParams(dnsRecordsApiUrl, args);
 
 		const response = await DNS.request(dnsRecordsApiUrl.toString());
+
+		if (response.success !== true) {
+			throw new Error(response.errors[0].message);
+		}
+
+		return response;
+	}
+
+	/**
+	 * Update a DNS Records for a Zone
+	 *
+	 * @param {object} args Arguments to pass to request string
+	 * @returns {Promise<*>}
+	 */
+	static async update(args) {
+		const { type = 'A', name = '', content = '', ttl = 1, proxied = true, priority = 0 } = args;
+
+		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
+		const zoneId = maybeZoneId || args.zone;
+
+		const maybeRecordId = await DNS.convertRecordNameToId(zoneId, args.record);
+		const recordId = maybeRecordId || args.record;
+
+		const requestArgs = { type, name, content, ttl, proxied };
+
+		if (priority) {
+			requestArgs.priority = priority;
+		}
+
+		if (type === 'TXT' || type === 'MX') {
+			requestArgs.proxied = false;
+		}
+
+		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records/${recordId}`);
+
+		const response = await DNS.request(dnsRecordsApiUrl.toString(), 'PUT', requestArgs);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);

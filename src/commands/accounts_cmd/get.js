@@ -7,7 +7,7 @@ exports.desc = 'Get information about a specific account that you are a member o
 exports.builder = {
 	...formatter.commandArgs(),
 	fields: {
-		default: 'id,name,type',
+		default: 'id,name,type,created_on',
 		describe: 'Fields to return',
 		type: 'string',
 	},
