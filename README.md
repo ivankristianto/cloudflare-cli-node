@@ -17,7 +17,7 @@
 
 ## How To
 
-[See this page](https://github.com/ivankristianto/cloudflare-api-node/blob/master/HOWTO.md)
+[See the wiki page](https://github.com/ivankristianto/cloudflare-cli-node/wiki)
 
 ## Changelog
 
