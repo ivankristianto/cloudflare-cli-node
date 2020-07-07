@@ -7,7 +7,7 @@ exports.desc = 'Get details of a zone firewall';
 exports.builder = {
 	...formatter.commandArgs(),
 	fields: {
-		default: 'id,description,paused,modified_on,filter.id,filter.expression',
+		default: 'id,description,paused,modified_on,filter.id,filter.expression,action',
 		describe: 'Fields to return',
 		type: 'string',
 	},

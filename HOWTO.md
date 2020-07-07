@@ -66,7 +66,7 @@ Note: Get account ID from user command
 ### List
 - `cf filters list <zone>`
 
-### List
+### Update
 - `cf filters update <zone> <filterId> --paused=false`
 - `cf filters update <zone> <filterId> --expression="<expression>"`
 - `cf filters update <zone> <filterId> --paused=false`
