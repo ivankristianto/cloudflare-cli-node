@@ -21,7 +21,13 @@ class DNS extends Cloudflare {
 			requestArgs.priority = priority;
 		}
 
+		if (type === 'TXT' || type === 'MX') {
+			requestArgs.proxied = false;
+		}
+
 		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records`);
+
+		console.log('DEBUG: requestArgs', requestArgs); // eslint-disable-line no-console
 
 		const response = await DNS.request(dnsRecordsApiUrl.toString(), 'POST', requestArgs);
 
