@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](https://keepachangelog.com/).
 
+## [0.2.0] - 2020-07-07
+
+### Added
+- Add new command: DNS > Update
+
+### Changed
+- Modify  default fields to firewall > get
+- Update README file for contributing and documentation section
+
+### Fixed
+- Fix issue with proxied always true for dns records
+
 ## [0.1.1] - 2020-07-06
 
 ### Fixed
