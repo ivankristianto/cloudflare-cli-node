@@ -15,9 +15,13 @@
 1. Run `cf config setup`, and use your api token.
 1. Run `cf --help` for all available commands.
 
-## How To
+## Documentation
 
-[See the wiki page](https://github.com/ivankristianto/cloudflare-cli-node/wiki)
+Documentation is available at [the wiki page](https://github.com/ivankristianto/cloudflare-cli-node/wiki) for all the available commands and the optional arguments.
+
+## Contributing
+
+Pull requests and feedback are welcome. _Contributing guideline will be added later._
 
 ## Changelog
 
