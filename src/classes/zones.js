@@ -1,7 +1,6 @@
 import Cloudflare from './cloudflare';
 
 class Zones extends Cloudflare {
-
 	/**
 	 * Force zones activation checks
 	 *
@@ -10,28 +9,38 @@ class Zones extends Cloudflare {
 	 *
 	 * @returns {Array}
 	 */
-	static async activation_check({zones=[]}){
+	static async activationCheck({ zones = [] }) {
 		const zoneIds = await Promise.all(
-			zones.map(async function(zone){
+			zones.map(async function (zone) {
 				const maybeZoneId = await Zones.convertZoneNameToId(zone);
 				return maybeZoneId || zone;
-			})
+			}),
 		);
 
-		let output = [];
-		for (let index = 0; index < zoneIds.length; index++) {
-			const zoneId = zoneIds[index];
+		const output = [];
+		const promises = [];
+		zoneIds.forEach((zoneId) => {
 			const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}/activation_check`);
+			promises.push(Zones.request(zonesApiUrl.toString(), 'PUT', {}));
+		});
 
-			const response = await Zones.request(zonesApiUrl.toString(), 'PUT', {});
+		const responses = await Promise.all(promises);
 
+		responses.forEach((response, index) => {
 			if (response.success !== true) {
-				output.push({name: zones[index], status: false});
-				continue;
+				output.push({
+					name: zones[index],
+					status: false,
+					message: response.errors[0].message,
+				});
+				return;
 			}
-
-			output.push({name: zones[index], status: true});
-		}
+			output.push({
+				name: zones[index],
+				status: true,
+				message: response.messages.length > 0 ? response.messages[0].message : '',
+			});
+		});
 
 		return output;
 	}

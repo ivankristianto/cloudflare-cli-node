@@ -7,7 +7,7 @@ exports.desc = 'Initiate another zone activation check';
 exports.builder = {
 	...formatter.commandArgs(),
 	fields: {
-		default: 'name,status',
+		default: 'name,status,message',
 		describe: 'Fields to return',
 		type: 'string',
 	},
@@ -23,12 +23,11 @@ exports.handler = async function (argv) {
 
 		const requestArgs = { zones };
 
-		const response = await Zones.activation_check(requestArgs);
+		const response = await Zones.activationCheck(requestArgs);
 
 		const results = formatter.mappingFields(fields, response);
 
 		formatter.output(results, { fields, format, separator });
-
 	} catch (err) {
 		log.error(err);
 	}
