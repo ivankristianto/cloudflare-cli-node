@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](https://keepachangelog.com/).
 
+## [next]
+
+### Added
+- Add new command Zones > activation_check
+- Allow filter zone list by account id
+
 ## [0.2.1] - 2020-07-20
 
 ### Changed
