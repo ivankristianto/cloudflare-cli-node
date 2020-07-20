@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](https://keepachangelog.com/).
 
+## [0.2.1] - 2020-07-20
+
+### Changed
+- Update some node package dependencies
+
 ## [0.2.0] - 2020-07-07
 
 ### Added
