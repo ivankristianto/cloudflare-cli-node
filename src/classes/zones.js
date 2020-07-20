@@ -1,6 +1,41 @@
 import Cloudflare from './cloudflare';
 
 class Zones extends Cloudflare {
+
+	/**
+	 * Force zones activation checks
+	 *
+	 * @param {object} args Object contain params
+	 * @param {Array} args.zones List of zones name to check for.
+	 *
+	 * @returns {Array}
+	 */
+	static async activation_check({zones=[]}){
+		const zoneIds = await Promise.all(
+			zones.map(async function(zone){
+				const maybeZoneId = await Zones.convertZoneNameToId(zone);
+				return maybeZoneId || zone;
+			})
+		);
+
+		let output = [];
+		for (let index = 0; index < zoneIds.length; index++) {
+			const zoneId = zoneIds[index];
+			const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}/activation_check`);
+
+			const response = await Zones.request(zonesApiUrl.toString(), 'PUT', {});
+
+			if (response.success !== true) {
+				output.push({name: zones[index], status: false});
+				continue;
+			}
+
+			output.push({name: zones[index], status: true});
+		}
+
+		return output;
+	}
+
 	/**
 	 * Create a new Zone
 	 *
