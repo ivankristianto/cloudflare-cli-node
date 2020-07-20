@@ -1,6 +1,41 @@
 import Zones from '../../classes/zones';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+async function run(argv){
+	try {
+		const { account, fields, separator, perPage, page, order, direction, status, spinner, zoneName } = argv;
+		let { format = 'table' } = argv;
+
+		spinner.text = `Zones list started.`;
+
+		if (fields === 'id') {
+			format = 'string';
+		}
+
+		const requestArgs = { account, perPage, page, order, direction };
+
+		if (zoneName) {
+			requestArgs.zoneName = zoneName;
+		}
+
+		if (status) {
+			requestArgs.status = status;
+		}
+
+		const response = await Zones.list(requestArgs);
+
+		const results = formatter.mappingFields(fields, response.result);
+
+		formatter.output(results, { fields, format, separator });
+
+		spinner.text = `Zones list done.`;
+
+	} catch (err) {
+		log.error(err);
+	}
+}
 
 exports.command = 'list';
 exports.desc = 'List, search, sort, and filter your zones';
@@ -44,31 +79,4 @@ exports.builder = {
 		type: 'string',
 	}
 };
-exports.handler = async function (argv) {
-	try {
-		const { account, fields, separator, perPage, page, order, direction, status, zoneName } = argv;
-		let { format = 'table' } = argv;
-
-		if (fields === 'id') {
-			format = 'string';
-		}
-
-		const requestArgs = { account, perPage, page, order, direction };
-
-		if (zoneName) {
-			requestArgs.zoneName = zoneName;
-		}
-
-		if (status) {
-			requestArgs.status = status;
-		}
-
-		const response = await Zones.list(requestArgs);
-
-		const results = formatter.mappingFields(fields, response.result);
-
-		formatter.output(results, { fields, format, separator });
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(run);
