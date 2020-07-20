@@ -39,17 +39,21 @@ exports.builder = {
 		describe: 'Array of domain names',
 		type: 'array',
 	},
+	account: {
+		describe: 'Filter by account id',
+		type: 'string',
+	}
 };
 exports.handler = async function (argv) {
 	try {
-		const { fields, separator, perPage, page, order, direction, status, zoneName } = argv;
+		const { account, fields, separator, perPage, page, order, direction, status, zoneName } = argv;
 		let { format = 'table' } = argv;
 
 		if (fields === 'id') {
 			format = 'string';
 		}
 
-		const requestArgs = { perPage, page, order, direction };
+		const requestArgs = { account, perPage, page, order, direction };
 
 		if (zoneName) {
 			requestArgs.zoneName = zoneName;

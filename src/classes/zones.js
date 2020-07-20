@@ -94,8 +94,12 @@ class Zones extends Cloudflare {
 	 * @returns {Promise<*>}
 	 */
 	static async list(args = {}) {
-		const { status = '', zoneName = '' } = args;
+		const { account = '', status = '', zoneName = '' } = args;
 		let zonesApiUrl = Zones.buildApiURL('zones');
+
+		if (account) {
+			zonesApiUrl.searchParams.append('account.id', account);
+		}
 
 		if (zoneName) {
 			zonesApiUrl.searchParams.append('name', zoneName);
