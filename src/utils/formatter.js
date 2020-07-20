@@ -115,7 +115,6 @@ class formatter {
 	static output(results, args) {
 		const { fields, format, separator } = args;
 
-		console.log(``);
 		switch (format) {
 			case 'json':
 				formatter.toJson(results);
@@ -124,10 +123,12 @@ class formatter {
 				formatter.toString(results, separator);
 				break;
 			case 'list':
+				console.log(``);
 				formatter.toList(fields, results);
 				break;
 			case 'table':
 			default:
+				console.log(``);
 				formatter.toTable(fields, results);
 				break;
 		}

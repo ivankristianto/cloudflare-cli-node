@@ -8,7 +8,7 @@ async function run(argv){
 		const { account, fields, separator, perPage, page, order, direction, status, spinner, zoneName } = argv;
 		let { format = 'table' } = argv;
 
-		spinner.text = `Zones list started.`;
+		spinner.text = `Get Zone list…`;
 
 		if (fields === 'id') {
 			format = 'string';
@@ -30,7 +30,7 @@ async function run(argv){
 
 		formatter.output(results, { fields, format, separator });
 
-		spinner.text = `Zones list done.`;
+		spinner.text = `Get Zone list done!`;
 
 	} catch (err) {
 		log.error(err);

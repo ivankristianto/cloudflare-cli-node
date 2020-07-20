@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import yargs from 'yargs';
+import yargs, { boolean } from 'yargs';
 import log from './utils/logger';
 
 // eslint-disable-next-line consistent-return
@@ -10,6 +10,16 @@ function main() {
 		return yargs
 			.commandDir('commands')
 			.demandCommand()
+			.option('disableSpinner', {
+				description: 'Disable spinner',
+				default: false,
+				type: 'boolean'
+			})
+			.option('debug', {
+				description: 'Enablle debug messages',
+				default: false,
+				type: 'boolean'
+			})
 			.help()
 			.wrap(Math.min(120, yargs.terminalWidth())).argv;
 	} catch (e) {

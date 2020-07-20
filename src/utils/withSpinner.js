@@ -4,6 +4,13 @@
 import ora from 'ora';
 // Spinner
 const withSpinner = (command) => (...args) => {
+	const {disableSpinner} = args[0];
+
+	if(disableSpinner){
+		args[0].spinner = {};
+		return command(...args);
+	}
+
 	const spinner = ora().start();
 	// eslint-disable-next-line no-param-reassign
 	args[0].spinner = spinner;

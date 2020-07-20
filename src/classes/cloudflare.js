@@ -86,7 +86,7 @@ class Cloudflare extends Request {
 		if (Cloudflare.isDomain(zoneName)) {
 			// zoneId is a domain, need to change to zone id.
 			let zoneListResponseString = await execSync(
-				`cf zones list --zoneName=${zoneName} --fields=id`,
+				`cf zones list --zoneName=${zoneName} --fields=id --disableSpinner`,
 			);
 
 			if (!zoneListResponseString) {
