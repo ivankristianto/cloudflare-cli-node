@@ -1,40 +1,51 @@
 import Zones from '../../classes/zones';
-import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
 import withSpinner from '../../utils/withSpinner';
 
-async function run(argv){
-	try {
-		const { account, fields, separator, perPage, page, order, direction, status, spinner, zoneName } = argv;
-		let { format = 'table' } = argv;
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @returns {Promise<void>}
+ */
+async function run(argv) {
+	const {
+		account,
+		debug,
+		fields,
+		separator,
+		perPage,
+		page,
+		order,
+		direction,
+		status,
+		spinner,
+		zoneName,
+	} = argv;
+	let { format = 'table' } = argv;
 
-		spinner.text = `Get Zone list…`;
-
-		if (fields === 'id') {
-			format = 'string';
-		}
-
-		const requestArgs = { account, perPage, page, order, direction };
-
-		if (zoneName) {
-			requestArgs.zoneName = zoneName;
-		}
-
-		if (status) {
-			requestArgs.status = status;
-		}
-
-		const response = await Zones.list(requestArgs);
-
-		const results = formatter.mappingFields(fields, response.result);
-
-		formatter.output(results, { fields, format, separator });
-
-		spinner.text = `Get Zone list done!`;
-
-	} catch (err) {
-		log.error(err);
+	if (fields === 'id') {
+		format = 'string';
 	}
+
+	const requestArgs = { account, debug, direction, perPage, page, spinner, order };
+
+	if (zoneName) {
+		requestArgs.zoneName = zoneName;
+	}
+
+	if (status) {
+		requestArgs.status = status;
+	}
+
+	spinner.text = `Requesting Zone list…`;
+	const response = await Zones.list(requestArgs);
+
+	const results = formatter.mappingFields(fields, response.result);
+
+	formatter.output(results, { fields, format, separator });
+
+	spinner.text = `Get Zone list done!`;
 }
 
 exports.command = 'list';
@@ -77,6 +88,6 @@ exports.builder = {
 	account: {
 		describe: 'Filter by account id',
 		type: 'string',
-	}
+	},
 };
 exports.handler = withSpinner(run);

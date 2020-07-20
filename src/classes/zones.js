@@ -138,7 +138,7 @@ class Zones extends Cloudflare {
 	 * @returns {Promise<*>}
 	 */
 	static async list(args = {}) {
-		const { account = '', status = '', zoneName = '' } = args;
+		const { account = '', debug = false, status = '', spinner = {}, zoneName = '' } = args;
 		let zonesApiUrl = Zones.buildApiURL('zones');
 
 		if (account) {
@@ -155,6 +155,10 @@ class Zones extends Cloudflare {
 
 		zonesApiUrl = Zones.optionalParams(zonesApiUrl, args);
 
+		if (debug) {
+			spinner.info(`Requesting to Cloudflare: ${zonesApiUrl.toString()}`);
+			spinner.start();
+		}
 		const response = await Zones.request(zonesApiUrl.toString());
 
 		if (response.success !== true) {

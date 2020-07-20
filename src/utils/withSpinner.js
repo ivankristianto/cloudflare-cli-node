@@ -4,9 +4,10 @@
 import ora from 'ora';
 // Spinner
 const withSpinner = (command) => (...args) => {
-	const {disableSpinner} = args[0];
+	const { disableSpinner } = args[0];
 
-	if(disableSpinner){
+	if (disableSpinner) {
+		// eslint-disable-next-line no-param-reassign
 		args[0].spinner = {};
 		return command(...args);
 	}
@@ -31,7 +32,7 @@ const withSpinner = (command) => (...args) => {
 				console.error(error);
 				process.exit(1);
 			} else {
-				spinner.fail('An unknown error occured.');
+				spinner.fail('An unknown error occurred.');
 				process.exit(1);
 			}
 		},
