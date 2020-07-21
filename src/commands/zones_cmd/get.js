@@ -30,6 +30,7 @@ async function runCommand(argv) {
 
 	spinner.text = `Get Zone done!`;
 }
+
 exports.command = 'get <zone>';
 exports.desc = 'Get zone details';
 exports.builder = {
