@@ -1,6 +1,27 @@
 import fs from 'fs';
 import DNS from '../../classes/dns';
-import log from '../../utils/logger';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { output, spinner, zone } = argv;
+
+	spinner.text = `Exporting DNS records to ${output}…`;
+
+	const response = await DNS.export({ zone });
+
+	const fd = fs.openSync(output, 'w+');
+	fs.writeSync(fd, response);
+	fs.closeSync(fd);
+
+	spinner.text = `DNS records exported to file ${output}`;
+}
 
 exports.command = 'export <zone>';
 exports.desc = 'Export dns records for a zone';
@@ -11,18 +32,4 @@ exports.builder = {
 		demandOption: true,
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const { output, zone } = argv;
-
-		const response = await DNS.export({ zone });
-
-		const fd = fs.openSync(output, 'w+');
-		fs.writeSync(fd, response);
-		fs.closeSync(fd);
-
-		log.success(`DNS records exported to ${output}`);
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);

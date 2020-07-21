@@ -1,6 +1,47 @@
 import DNS from '../../classes/dns';
-import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const {
+		fields,
+		separator,
+		perPage,
+		page,
+		order,
+		content,
+		direction,
+		name,
+		spinner,
+		status,
+		type,
+		zone,
+	} = argv;
+	let { format = 'table' } = argv;
+
+	if (fields === 'id') {
+		format = 'string';
+	}
+
+	const requestArgs = { zone, perPage, page, order, content, direction, name, status, type };
+
+	spinner.text = `Requesting DNS record list…`;
+
+	const response = await DNS.list(requestArgs);
+
+	const results = formatter.mappingFields(fields, response.result);
+
+	formatter.output(results, { fields, format, separator });
+
+	spinner.text = `Get DNS record list done!`;
+}
 
 exports.command = 'list <zone>';
 exports.desc = 'List of dns records of a zone';
@@ -50,35 +91,4 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const {
-			fields,
-			separator,
-			perPage,
-			page,
-			order,
-			content,
-			direction,
-			name,
-			status,
-			type,
-			zone,
-		} = argv;
-		let { format = 'table' } = argv;
-
-		if (fields === 'id') {
-			format = 'string';
-		}
-
-		const requestArgs = { zone, perPage, page, order, content, direction, name, status, type };
-
-		const response = await DNS.list(requestArgs);
-
-		const results = formatter.mappingFields(fields, response.result);
-
-		formatter.output(results, { fields, format, separator });
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);

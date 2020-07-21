@@ -1,6 +1,34 @@
 import Filters from '../../classes/filters';
-import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { fields, separator, perPage, page, spinner, zone } = argv;
+	let { format = 'table' } = argv;
+
+	if (fields === 'id') {
+		format = 'string';
+	}
+
+	const requestArgs = { perPage, page };
+
+	spinner.text = `Requesting Filters list…`;
+
+	const response = await Filters.list(zone, requestArgs);
+
+	const results = formatter.mappingFields(fields, response.result);
+
+	formatter.output(results, { fields, format, separator });
+
+	spinner.text = `Get Filters list done!`;
+}
 
 exports.command = 'list <zone>';
 exports.desc = 'List of zone available firewall filters';
@@ -22,22 +50,4 @@ exports.builder = {
 		type: 'integer',
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const { fields, separator, perPage, page, zone } = argv;
-		let { format = 'table' } = argv;
-
-		if (fields === 'id') {
-			format = 'string';
-		}
-
-		const requestArgs = { perPage, page };
-		const response = await Filters.list(zone, requestArgs);
-
-		const results = formatter.mappingFields(fields, response.result);
-
-		formatter.output(results, { fields, format, separator });
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);

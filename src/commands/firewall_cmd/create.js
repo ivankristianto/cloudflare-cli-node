@@ -1,6 +1,66 @@
 import Firewall from '../../classes/firewall';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const {
+		action,
+		description = '',
+		expression,
+		fields,
+		filterId,
+		format = 'list',
+		paused,
+		priority,
+		ref,
+		separator,
+		spinner,
+		zone,
+	} = argv;
+
+	if (!filterId && !expression) {
+		log.warning('You need to provide filterId or expression');
+		return;
+	}
+
+	let filters = {};
+
+	if (filterId) {
+		filters = {
+			filter: {
+				id: filterId,
+			},
+		};
+	}
+
+	if (expression) {
+		filters = {
+			filter: {
+				expression,
+			},
+		};
+	}
+
+	const requestArgs = { ...filters, action, description, paused, priority, ref };
+
+	spinner.text = `Creating Firewall rule…`;
+
+	const response = await Firewall.create(zone, requestArgs);
+
+	const results = formatter.mappingField(fields, response.result[0]);
+
+	formatter.output([results], { fields, format, separator });
+
+	spinner.text = `New Firewall rule created successfully!`;
+}
 
 exports.command = 'create <zone>';
 exports.desc = 'Create a new firewall rule';
@@ -43,54 +103,4 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const {
-			filterId,
-			expression,
-			action,
-			description = '',
-			paused,
-			priority,
-			ref,
-			zone,
-			fields,
-			format = 'list',
-			separator,
-		} = argv;
-
-		if (!filterId && !expression) {
-			log.warning('You need to provide filterId or expression');
-			return;
-		}
-
-		let filters = {};
-
-		if (filterId) {
-			filters = {
-				filter: {
-					id: filterId,
-				},
-			};
-		}
-
-		if (expression) {
-			filters = {
-				filter: {
-					expression,
-				},
-			};
-		}
-
-		const requestArgs = { ...filters, action, description, paused, priority, ref };
-
-		const response = await Firewall.create(zone, requestArgs);
-
-		const results = formatter.mappingField(fields, response.result[0]);
-
-		formatter.output([results], { fields, format, separator });
-		log.success('Firewall created successfully!');
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);

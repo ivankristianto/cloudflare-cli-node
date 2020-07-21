@@ -1,21 +1,28 @@
 import Firewall from '../../classes/firewall';
-import log from '../../utils/logger';
-import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { firewallId, spinner, zone } = argv;
+
+	spinner.text = `Deleting Firewall with id ${firewallId}…`;
+
+	await Firewall.delete(zone, firewallId);
+
+	spinner.warn(
+		'Delete a firewall rule will not delete the filter, you need to delete it manually. Run cf filters delete <zone> <filterId>',
+	);
+	spinner.start();
+	spinner.text = `Firewall ${firewallId} successfully deleted`;
+}
 
 exports.command = 'delete <zone> <firewallId>';
 exports.desc = 'Delete a firewall rule';
 exports.builder = {};
-exports.handler = async function (argv) {
-	try {
-		const { zone, firewallId } = argv;
-
-		await Firewall.delete(zone, firewallId);
-
-		formatter.toString([`Firewall ${firewallId} successfully deleted`]);
-		log.warning(
-			'Deleting a firewall rule will not delete the filter, you need to delete it manually. \nRun cf filters delete <zone> <filterId>',
-		);
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);

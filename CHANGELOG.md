@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](https://keepachangelog.com/).
 
+## [next]
+
+
+## [0.3.0] - 2020-07-21
+
+### Added
+- Add new command Zones > activation_check
+- Allow filter zone list by account id
+- Add `ora` package for spinner library
+- Add spinner on every commands
+- Add `disableSpinner` argument globally to disable spinner on a command
+
+### Fixed
+- Fix eslint configurations
+- Fix build and test process on GitHub action
+
 ## [0.2.1] - 2020-07-20
 
 ### Changed

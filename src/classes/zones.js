@@ -2,6 +2,50 @@ import Cloudflare from './cloudflare';
 
 class Zones extends Cloudflare {
 	/**
+	 * Force zones activation checks
+	 *
+	 * @param {object} args Object contain params
+	 * @param {Array} args.zones List of zones name to check for.
+	 *
+	 * @returns {Array}
+	 */
+	static async activationCheck({ zones = [] }) {
+		const zoneIds = await Promise.all(
+			zones.map(async function (zone) {
+				const maybeZoneId = await Zones.convertZoneNameToId(zone);
+				return maybeZoneId || zone;
+			}),
+		);
+
+		const output = [];
+		const promises = [];
+		zoneIds.forEach((zoneId) => {
+			const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}/activation_check`);
+			promises.push(Zones.request(zonesApiUrl.toString(), 'PUT', {}));
+		});
+
+		const responses = await Promise.all(promises);
+
+		responses.forEach((response, index) => {
+			if (response.success !== true) {
+				output.push({
+					name: zones[index],
+					status: false,
+					message: response.errors[0].message,
+				});
+				return;
+			}
+			output.push({
+				name: zones[index],
+				status: true,
+				message: response.messages.length > 0 ? response.messages[0].message : '',
+			});
+		});
+
+		return output;
+	}
+
+	/**
 	 * Create a new Zone
 	 *
 	 * @param {object} args Arguments to pass to request string
@@ -94,8 +138,12 @@ class Zones extends Cloudflare {
 	 * @returns {Promise<*>}
 	 */
 	static async list(args = {}) {
-		const { status = '', zoneName = '' } = args;
+		const { account = '', debug = false, status = '', spinner = {}, zoneName = '' } = args;
 		let zonesApiUrl = Zones.buildApiURL('zones');
+
+		if (account) {
+			zonesApiUrl.searchParams.append('account.id', account);
+		}
 
 		if (zoneName) {
 			zonesApiUrl.searchParams.append('name', zoneName);
@@ -107,6 +155,10 @@ class Zones extends Cloudflare {
 
 		zonesApiUrl = Zones.optionalParams(zonesApiUrl, args);
 
+		if (debug) {
+			spinner.info(`Requesting to Cloudflare: ${zonesApiUrl.toString()}`);
+			spinner.start();
+		}
 		const response = await Zones.request(zonesApiUrl.toString());
 
 		if (response.success !== true) {

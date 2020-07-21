@@ -1,6 +1,6 @@
 {
   "name": "cloudflare-cli-node",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Cloudflare API CLI Interface with Node.js",
   "bin": {
     "cf": "bin/cf"
@@ -15,6 +15,7 @@
     "inquirer": "^7.3.2",
     "lodash": "^4.17.19",
     "node-fetch": "^2.6.0",
+    "ora": "^4.0.5",
     "yargs": "^15.4.1"
   },
   "devDependencies": {
@@ -44,12 +45,6 @@
     "rimraf": "^3.0.2",
     "sinon": "^9.0.2",
     "temp": "^0.9.1"
-  },
-  "eslintConfig": {
-    "env": {
-      "mocha": true,
-      "node": true
-    }
   },
   "scripts": {
     "build": "npm run clean && cross-env BABEL_ENV=commonjs babel src --out-dir lib",

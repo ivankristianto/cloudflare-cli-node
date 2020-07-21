@@ -1,18 +1,24 @@
 import Zones from '../../classes/zones';
-import log from '../../utils/logger';
-import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { spinner, zone } = argv;
+
+	spinner.text = `Deleting zone ${zone}`;
+
+	await Zones.delete(zone);
+
+	spinner.text = `Zone ${zone} successfully deleted!`;
+}
 
 exports.command = 'delete <zone>';
 exports.desc = 'Delete a zone';
 exports.builder = {};
-exports.handler = async function (argv) {
-	try {
-		const { zone } = argv;
-
-		await Zones.delete(zone);
-
-		formatter.toJson(`Zone ${zone} succesfully deleted`);
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);

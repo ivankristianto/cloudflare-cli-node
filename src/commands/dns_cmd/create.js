@@ -1,6 +1,34 @@
 import DNS from '../../classes/dns';
-import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { fields, type, name, content, ttl, proxied, priority, separator, spinner, zone } = argv;
+	let { format = 'list' } = argv;
+
+	if (fields === 'id') {
+		format = 'string';
+	}
+
+	const requestArgs = { type, name, content, ttl, proxied, priority, zone };
+
+	spinner.text = `Creating DNS record…`;
+
+	const response = await DNS.create(requestArgs);
+
+	const results = formatter.mappingField(fields, response.result);
+
+	formatter.output([results], { fields, format, separator });
+
+	spinner.text = `DNS record ${name} successfully created!`;
+}
 
 exports.command = 'create <zone>';
 exports.desc = 'Create a dns record for a zone';
@@ -45,23 +73,4 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const { fields, type, name, content, ttl, proxied, priority, separator, zone } = argv;
-		let { format = 'list' } = argv;
-
-		if (fields === 'id') {
-			format = 'string';
-		}
-
-		const requestArgs = { type, name, content, ttl, proxied, priority, zone };
-		const response = await DNS.create(requestArgs);
-
-		const results = formatter.mappingField(fields, response.result);
-
-		formatter.output([results], { fields, format, separator });
-		log.success(`\nDNS record ${name} successfully created`);
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);

@@ -10,6 +10,16 @@ function main() {
 		return yargs
 			.commandDir('commands')
 			.demandCommand()
+			.option('disableSpinner', {
+				description: 'Disable spinner',
+				default: false,
+				type: 'boolean',
+			})
+			.option('verbose', {
+				description: 'Enable verbose messages',
+				default: false,
+				type: 'boolean',
+			})
 			.help()
 			.wrap(Math.min(120, yargs.terminalWidth())).argv;
 	} catch (e) {
