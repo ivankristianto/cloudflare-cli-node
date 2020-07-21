@@ -1,6 +1,34 @@
 import Zones from '../../classes/zones';
-import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { accountId, jumpStart, type, zone, fields, format = 'list', separator, spinner } = argv;
+
+	const requestArgs = {
+		name: zone,
+		accountId,
+		jumpStart,
+		type,
+	};
+
+	spinner.text = `Creating new Zone…`;
+
+	const response = await Zones.create(requestArgs);
+
+	const results = formatter.mappingField(fields, response.result);
+
+	formatter.output([results], { fields, format, separator });
+
+	spinner.text = `Zone create done!`;
+}
 
 exports.command = 'create <zone>';
 exports.desc = 'Create new zone, permission needed: #zone:edit';
@@ -27,23 +55,4 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const { accountId, jumpStart, type, zone, fields, format = 'list', separator } = argv;
-
-		const requestArgs = {
-			name: zone,
-			accountId,
-			jumpStart,
-			type,
-		};
-
-		const response = await Zones.create(requestArgs);
-
-		const results = formatter.mappingField(fields, response.result);
-
-		formatter.output([results], { fields, format, separator });
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);

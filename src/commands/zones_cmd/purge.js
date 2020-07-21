@@ -1,5 +1,28 @@
 import Zones from '../../classes/zones';
-import log from '../../utils/logger';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { all, files, hosts, tags, spinner, zone } = argv;
+
+	const requestArgs = { all, files, hosts, tags };
+
+	spinner.text = `Sending Zone purge cache request…`;
+
+	const response = await Zones.purge(zone, requestArgs);
+
+	if (response.success) {
+		spinner.text = `Zone ${zone} cache(s) purged successfully!`;
+	} else {
+		throw new Error(response.errors[0]);
+	}
+}
 
 exports.command = 'purge <zone>';
 exports.desc = 'Purge caches';
@@ -25,20 +48,4 @@ exports.builder = {
 		type: 'array',
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const { all, files, hosts, tags, zone } = argv;
-
-		const requestArgs = { all, files, hosts, tags };
-
-		const response = await Zones.purge(zone, requestArgs);
-
-		if (response.success) {
-			log.success('Zone Cache(s) Purges Successfully');
-		} else {
-			log.error(`Error: ${response.errors[0]}`);
-		}
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);
