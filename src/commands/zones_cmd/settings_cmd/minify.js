@@ -1,6 +1,38 @@
 import Zones from '../../../classes/zones';
-import log from '../../../utils/logger';
 import formatter from '../../../utils/formatter';
+import withSpinner from '../../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { fields, format, separator, spinner, value, zone } = argv;
+	let requestArgs = {};
+	let response;
+
+	if (value) {
+		requestArgs = { value: JSON.parse(value) };
+		spinner.text = `Updating Zone minify setting…`;
+		response = await Zones.setSettings(zone, 'minify', requestArgs);
+	} else {
+		spinner.text = `Getting Zone minify setting…`;
+		response = await Zones.getSettings(zone, 'minify');
+	}
+
+	const results = formatter.mappingField(fields, response.result.value);
+
+	formatter.output([results], {
+		fields,
+		format,
+		separator,
+	});
+
+	spinner.text = `Request to Zone minify setting done!`;
+}
 
 exports.command = 'minify <zone>';
 exports.desc = 'Get zone minify settings';
@@ -16,28 +48,4 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const { fields, format, separator, value, zone } = argv;
-		let requestArgs = {};
-		let response = {};
-
-		if (value) {
-			requestArgs = { value: JSON.parse(value) };
-			response = await Zones.setSettings(zone, 'minify', requestArgs);
-			log.success('\nMinify settings update successfully. New settings:');
-		} else {
-			response = await Zones.getSettings(zone, 'minify');
-		}
-
-		const results = formatter.mappingField(fields, response.result.value);
-
-		formatter.output([results], {
-			fields,
-			format,
-			separator,
-		});
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);
