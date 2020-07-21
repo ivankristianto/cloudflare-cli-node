@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file, per [the Ke
 - Add new command Zones > activation_check
 - Allow filter zone list by account id
 
+### Fixed
+- Fix eslint configurations
+
 ## [0.2.1] - 2020-07-20
 
 ### Changed
