@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ### Fixed
 - Fix eslint configurations
+- Fix build and test process on GitHub action
 
 ## [0.2.1] - 2020-07-20
 
