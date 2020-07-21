@@ -39,6 +39,7 @@ async function runCommand(argv) {
 	}
 
 	spinner.text = `Requesting Zone list…`;
+
 	const response = await Zones.list(requestArgs);
 
 	const results = formatter.mappingFields(fields, response.result);

@@ -1,6 +1,32 @@
 import Firewall from '../../classes/firewall';
-import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
+import withSpinner from '../../utils/withSpinner';
+
+/**
+ * Run Command
+ *
+ * @param {object} argv Command params
+ * @param {string} argv.format Output format
+ * @returns {Promise<void>}
+ */
+async function runCommand(argv) {
+	const { fields, firewallId, separator, spinner, zone } = argv;
+	let { format = 'list' } = argv;
+
+	if (fields === 'id') {
+		format = 'string';
+	}
+
+	spinner.text = `Requesting Firewall information…`;
+
+	const response = await Firewall.get(zone, firewallId);
+
+	const results = formatter.mappingField(fields, response.result);
+
+	formatter.output([results], { fields, format, separator });
+
+	spinner.text = `Get Firewall information done!`;
+}
 
 exports.command = 'get <zone> <firewallId>';
 exports.desc = 'Get details of a zone firewall';
@@ -12,21 +38,4 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = async function (argv) {
-	try {
-		const { fields, firewallId, separator, zone } = argv;
-		let { format = 'list' } = argv;
-
-		if (fields === 'id') {
-			format = 'string';
-		}
-
-		const response = await Firewall.get(zone, firewallId);
-
-		const results = formatter.mappingField(fields, response.result);
-
-		formatter.output([results], { fields, format, separator });
-	} catch (err) {
-		log.error(err);
-	}
-};
+exports.handler = withSpinner(runCommand);
