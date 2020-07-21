@@ -46,12 +46,6 @@
     "sinon": "^9.0.2",
     "temp": "^0.9.1"
   },
-  "eslintConfig": {
-    "env": {
-      "mocha": true,
-      "node": true
-    }
-  },
   "scripts": {
     "build": "npm run clean && cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "clean": "rimraf lib",
