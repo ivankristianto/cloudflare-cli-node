@@ -115,7 +115,7 @@ class Cloudflare extends Request {
 	static async convertRecordNameToId(zoneId, recordName) {
 		// zoneId is a domain, need to change to zone id.
 		let dnsListResponseString = await execSync(
-			`cf dns list ${zoneId} --name=${recordName} --fields=id`,
+			`cf dns list ${zoneId} --name=${recordName} --fields=id --disableSpinner`,
 		);
 
 		if (!dnsListResponseString) {
