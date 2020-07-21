@@ -8,10 +8,9 @@ import withSpinner from '../../utils/withSpinner';
  * @param {object} argv Command params
  * @returns {Promise<void>}
  */
-async function run(argv) {
+async function runCommand(argv) {
 	const {
 		account,
-		debug,
 		fields,
 		separator,
 		perPage,
@@ -20,6 +19,7 @@ async function run(argv) {
 		direction,
 		status,
 		spinner,
+		verbose,
 		zoneName,
 	} = argv;
 	let { format = 'table' } = argv;
@@ -28,7 +28,7 @@ async function run(argv) {
 		format = 'string';
 	}
 
-	const requestArgs = { account, debug, direction, perPage, page, spinner, order };
+	const requestArgs = { account, direction, perPage, page, spinner, order, verbose };
 
 	if (zoneName) {
 		requestArgs.zoneName = zoneName;
@@ -90,4 +90,4 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = withSpinner(run);
+exports.handler = withSpinner(runCommand);

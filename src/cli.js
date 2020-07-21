@@ -15,8 +15,8 @@ function main() {
 				default: false,
 				type: 'boolean',
 			})
-			.option('debug', {
-				description: 'Enable debug messages',
+			.option('verbose', {
+				description: 'Enable verbose messages',
 				default: false,
 				type: 'boolean',
 			})
