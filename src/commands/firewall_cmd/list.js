@@ -1,4 +1,3 @@
-import { map } from 'lodash';
 import Firewall from '../../classes/firewall';
 import log from '../../utils/logger';
 import formatter from '../../utils/formatter';
