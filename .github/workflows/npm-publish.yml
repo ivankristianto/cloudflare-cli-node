@@ -15,10 +15,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm install
-      - run: npm run build
-      - run: npm run lint
-      - run: npm test
+      - name: npm install and build
+        run: |
+          npm install
+          npm test
+          npm run lint
 
   publish-npm:
     needs: build
