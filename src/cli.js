@@ -20,6 +20,11 @@ function main() {
 				default: false,
 				type: 'boolean',
 			})
+			.option('useToken', {
+				description: 'Use specific token',
+				default: '',
+				type: 'string',
+			})
 			.help()
 			.wrap(Math.min(120, yargs.terminalWidth())).argv;
 	} catch (e) {

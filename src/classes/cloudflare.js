@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+import yargs from 'yargs';
 import Request from './request';
 
 class Cloudflare extends Request {
@@ -83,10 +84,12 @@ class Cloudflare extends Request {
 	 * @returns {string|boolean} Return zone id or false if zone name is not found.
 	 */
 	static async convertZoneNameToId(zoneName) {
+		const { useToken = '' } = yargs.argv;
+
 		if (Cloudflare.isDomain(zoneName)) {
 			// zoneId is a domain, need to change to zone id.
 			let zoneListResponseString = await execSync(
-				`cf zones list --zoneName=${zoneName} --fields=id --disableSpinner`,
+				`cf zones list --zoneName=${zoneName} --fields=id --disableSpinner --useToken=${useToken}`,
 			);
 
 			if (!zoneListResponseString) {
@@ -113,9 +116,10 @@ class Cloudflare extends Request {
 	 * @returns {string|boolean} Return zone id or false if zone name is not found.
 	 */
 	static async convertRecordNameToId(zoneId, recordName) {
+		const { useToken = '' } = yargs.argv;
 		// zoneId is a domain, need to change to zone id.
 		let dnsListResponseString = await execSync(
-			`cf dns list ${zoneId} --name=${recordName} --fields=id --disableSpinner`,
+			`cf dns list ${zoneId} --name=${recordName} --fields=id --disableSpinner --useToken=${useToken}`,
 		);
 
 		if (!dnsListResponseString) {

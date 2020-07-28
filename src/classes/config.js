@@ -1,6 +1,7 @@
 import os from 'os';
 import path from 'path';
 import fs from 'fs-extra';
+import yargs from 'yargs';
 import log from '../utils/logger';
 
 class Config {
@@ -11,6 +12,8 @@ class Config {
 	static defaultConfig() {
 		return {
 			apiToken: '',
+			current: 'default',
+			accounts: [],
 		};
 	}
 
@@ -35,6 +38,13 @@ class Config {
 		return typeof config[key] === 'undefined' ? defaults[key] : config[key];
 	}
 
+	static async getAll() {
+		const defaults = Config.defaultConfig();
+		const config = await Config.read();
+
+		return Object.assign(defaults, config);
+	}
+
 	static async set(key, value) {
 		const config = await Config.read();
 
@@ -43,8 +53,28 @@ class Config {
 		await Config.write(config);
 	}
 
+	/**
+	 * Get auth token.
+	 *
+	 * @returns {Promise<boolean|*>}
+	 */
 	static async getAuthToken() {
-		const token = await Config.get('apiToken');
+		let token = await Config.get('apiToken');
+		const { useToken } = yargs.argv;
+
+		if (useToken) {
+			const config = await Config.getAll();
+			const accounts = config.accounts.filter(function (account) {
+				return account.name === useToken;
+			});
+
+			if (accounts.length === 0) {
+				log.warning('Token not found');
+				return false;
+			}
+
+			token = accounts[0].apiToken;
+		}
 
 		if (!token) {
 			log.warning('Please run cf config setup');
