@@ -1,4 +1,5 @@
 import fs from 'fs-extra';
+import { merge } from 'lodash';
 import FormData from 'form-data';
 import Cloudflare from './cloudflare';
 
@@ -176,15 +177,33 @@ class DNS extends Cloudflare {
 	 * @returns {Promise<*>}
 	 */
 	static async update(args) {
-		const { type = 'A', name = '', content = '', ttl = 1, proxied = true, priority = 0 } = args;
+		const { type, name, content, ttl, proxied, priority, record, zone } = args;
 
-		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
-		const zoneId = maybeZoneId || args.zone;
+		const dnsResponse = await DNS.get({ record, zone });
+		const dnsRecord = dnsResponse.result;
 
-		const maybeRecordId = await DNS.convertRecordNameToId(zoneId, args.record);
-		const recordId = maybeRecordId || args.record;
+		const {
+			type: originType,
+			name: originName,
+			content: originContent,
+			ttl: originTtl,
+			proxied: originProxied,
+			priority: originPriority,
+			zone_id: zoneId,
+			id: recordId,
+		} = dnsRecord;
 
-		const requestArgs = { type, name, content, ttl, proxied };
+		const requestArgs = merge(
+			{
+				type: originType,
+				name: originName,
+				content: originContent,
+				ttl: originTtl,
+				proxied: originProxied,
+				priority: originPriority,
+			},
+			{ type, name, content, ttl, proxied, priority },
+		);
 
 		if (priority) {
 			requestArgs.priority = priority;

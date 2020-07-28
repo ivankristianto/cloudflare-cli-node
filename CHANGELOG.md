@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ## [next]
 
+### Changed
+- Change dns update command, now only need to pass the dns record value that need to be changed.
 
 ## [0.3.0] - 2020-07-21
 

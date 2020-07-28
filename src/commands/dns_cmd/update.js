@@ -31,7 +31,7 @@ async function runCommand(argv) {
 
 	const requestArgs = { type, name, content, ttl, proxied, priority, record, zone };
 
-	spinner.text = `Updating DNS record ${name}…`;
+	spinner.text = `Updating DNS record…`;
 
 	const response = await DNS.update(requestArgs);
 
@@ -52,15 +52,16 @@ exports.builder = {
 		type: 'string',
 	},
 	type: {
-		default: 'A',
-		describe: 'DNS record type, default A',
+		describe: 'DNS record type',
 		type: 'string',
-		demandOption: true,
 	},
 	content: {
 		describe: 'DNS record content',
 		type: 'string',
-		demandOption: true,
+	},
+	name: {
+		describe: 'DNS record name',
+		type: 'string',
 	},
 	ttl: {
 		default: '1',
