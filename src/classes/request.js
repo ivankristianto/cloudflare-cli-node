@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import Config from '../utils/config';
+import Config from './config';
 import log from '../utils/logger';
 
 class Request {

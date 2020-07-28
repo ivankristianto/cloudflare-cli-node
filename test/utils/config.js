@@ -10,7 +10,7 @@ import temp from 'temp';
 /**
  * Internal dependencies
  */
-import Config from '../../lib/utils/config';
+import Config from '../../lib/classes/config';
 
 describe('utils: config', () => {
 	const fixtureDir = resolve(__dirname, '../fixtures');

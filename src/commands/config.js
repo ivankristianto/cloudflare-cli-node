@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import log from '../utils/logger';
-import Config from '../utils/config';
+import Config from '../classes/config';
 import { validateNotEmpty } from '../utils/promp-validators';
 
 exports.command = 'config setup';

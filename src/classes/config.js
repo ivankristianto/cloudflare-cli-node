@@ -1,7 +1,7 @@
 import os from 'os';
 import path from 'path';
 import fs from 'fs-extra';
-import log from './logger';
+import log from '../utils/logger';
 
 class Config {
 	static getConfigFile() {
