@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file, per [the Ke
 ## [next]
 
 ### Added
-- Allow to add multiple access tokens, and use `useToken` argument to select the intended account.
+- Add new feature: adding multiple access tokens, and use `useToken` argument to select the intended account.
 
 ### Changed
 - Change dns update command, now only need to pass the dns record value that need to be changed.
