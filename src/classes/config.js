@@ -12,7 +12,6 @@ class Config {
 	static defaultConfig() {
 		return {
 			apiToken: '',
-			current: 'default',
 			accounts: [],
 		};
 	}

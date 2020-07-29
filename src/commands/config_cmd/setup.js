@@ -20,7 +20,7 @@ async function runCommand(argv) {
 		{
 			name: 'apiToken',
 			type: 'input',
-			message: 'Your Cloudflare API Token: ',
+			message: 'Your default Cloudflare API Token: ',
 			default: '',
 			validate: validateNotEmpty,
 		},
@@ -37,6 +37,6 @@ async function runCommand(argv) {
 }
 
 exports.command = 'setup';
-exports.desc = 'Setup Cloudflare API Token';
+exports.desc = 'Setup default Cloudflare API Token';
 exports.builder = {};
 exports.handler = withSpinner(runCommand);

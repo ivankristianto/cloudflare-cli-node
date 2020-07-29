@@ -22,8 +22,8 @@ async function runCommand(argv) {
 
 	formatter.toTable(fields, results);
 
-	// spinner.start();
-	// spinner.text = `Successfully saved api token file!`;
+	spinner.start();
+	spinner.text = `Get config list done!`;
 }
 
 exports.command = 'list';

@@ -1,7 +1,7 @@
 import log from '../utils/logger';
 
-exports.command = 'config setup';
-exports.desc = 'Setup Cloudflare API Token';
+exports.command = 'config';
+exports.desc = 'Configure Cloudflare API Token';
 exports.builder = function (yargs) {
 	return yargs.commandDir('config_cmd');
 };
