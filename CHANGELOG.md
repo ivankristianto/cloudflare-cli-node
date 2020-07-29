@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ## [next]
 
+## [0.4.0] - 2020-07-29
+
 ### Added
+- Add new commands: `config <add|delete|list|reset>` to manage api tokens.
 - Add new feature: adding multiple access tokens, and use `useToken` argument to select the intended account.
 
 ### Changed
