@@ -1,5 +1,6 @@
 import Table from 'cli-table3';
 import { map } from 'lodash';
+import { createArrayCsvWriter } from 'csv-writer';
 import log from './logger';
 import columnWidth from './column-width';
 import getDeep from './getDeep';
@@ -132,6 +133,25 @@ class formatter {
 				formatter.toTable(fields, results);
 				break;
 		}
+	}
+
+	/**
+	 * Output results into CSV file format with comma separated
+	 *
+	 * @param {string} file File path
+	 * @param {Array} results Result to display
+	 * @param {object} args Arguments for the fields
+	 * @returns {Promise<void>}
+	 */
+	static async toCsv(file, results, args) {
+		const { fields } = args;
+
+		const csvWriter = createArrayCsvWriter({
+			header: fields.split(','),
+			path: file,
+		});
+
+		await csvWriter.writeRecords(results);
 	}
 
 	/**

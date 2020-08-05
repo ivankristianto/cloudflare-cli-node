@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ## [next]
 
+### Added
+- Allow exporting zones list into csv file.
+
 ## [0.4.0] - 2020-07-29
 
 ### Added
