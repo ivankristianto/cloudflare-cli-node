@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ### Added
 - Allow exporting zones list into csv file.
+- Allow to delete dns with more than 1 record per command.
 
 ## [0.4.0] - 2020-07-29
 
