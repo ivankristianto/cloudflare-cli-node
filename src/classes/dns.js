@@ -40,25 +40,49 @@ class DNS extends Cloudflare {
 	/**
 	 * Delete a DNS Records for a Zone
 	 *
-	 * @param {object} args Arguments to pass to request string
+	 * @param {object} args Object contain params
+	 * @param {Array} args.zone List of zones name to check for.
+	 * @param {Array} args.records List of DNS records to delete.
 	 * @returns {Promise<*>}
 	 */
-	static async delete(args) {
-		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
-		const zoneId = maybeZoneId || args.zone;
+	static async delete({ zone, records }) {
+		const maybeZoneId = await DNS.convertZoneNameToId(zone);
+		const zoneId = maybeZoneId || zone;
 
-		const maybeRecordId = await DNS.convertRecordNameToId(zoneId, args.record);
-		const recordId = maybeRecordId || args.record;
+		const output = [];
+		const promises = [];
+		records.forEach((record) => {
+			const deleteSequence = async () => {
+				const maybeRecordId = await DNS.convertRecordNameToId(zoneId, record);
+				const recordId = maybeRecordId || record;
 
-		const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records/${recordId}`);
+				const dnsRecordsApiUrl = DNS.buildApiURL(`zones/${zoneId}/dns_records/${recordId}`);
 
-		const response = await DNS.request(dnsRecordsApiUrl.toString(), 'DELETE');
+				return DNS.request(dnsRecordsApiUrl.toString(), 'DELETE');
+			};
 
-		if (response.success !== true) {
-			throw new Error(response.errors[0].message);
-		}
+			promises.push(deleteSequence());
+		});
 
-		return response;
+		const responses = await Promise.all(promises);
+
+		responses.forEach((response, index) => {
+			if (response.success !== true) {
+				output.push({
+					recordId: records[index],
+					status: false,
+					message: response.errors[0].message,
+				});
+				return;
+			}
+			output.push({
+				recordId: records[index],
+				status: true,
+				message: response.messages.length > 0 ? response.messages[0].message : '',
+			});
+		});
+
+		return output;
 	}
 
 	/**

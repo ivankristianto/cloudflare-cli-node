@@ -1,4 +1,5 @@
 import DNS from '../../classes/dns';
+import formatter from '../../utils/formatter';
 import withSpinner from '../../utils/withSpinner';
 
 /**
@@ -9,17 +10,21 @@ import withSpinner from '../../utils/withSpinner';
  * @returns {Promise<void>}
  */
 async function runCommand(argv) {
-	const { record, spinner } = argv;
-	const requestArgs = { ...argv };
+	const { records, spinner, zone } = argv;
+	const requestArgs = { zone, records };
 
-	spinner.text = `Deleting DNS record ${record}…`;
+	spinner.text = `Deleting DNS record ${records}…`;
 
-	await DNS.delete(requestArgs);
+	const response = await DNS.delete(requestArgs);
 
-	spinner.text = `DNS record ${record} deleted successfully!`;
+	const fields = 'recordId,status,message';
+	const results = formatter.mappingFields(fields, response);
+	formatter.output(results, { fields, format: 'table' });
+
+	spinner.text = `DNS record ${records} deleted successfully!`;
 }
 
-exports.command = 'delete <zone> <record>';
+exports.command = 'delete <zone> [records...]';
 exports.desc = 'Delete a dns record in a zone';
 exports.builder = {};
 exports.handler = withSpinner(runCommand);
