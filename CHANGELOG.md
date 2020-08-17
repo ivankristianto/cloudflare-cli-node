@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ## [next]
 
+## [0.5.0] - 2020-08-18
+
 ### Added
-- Allow exporting zones list into csv file.
-- Allow to delete dns with more than 1 record per command.
+- Allow exporting zones list into csv file, `cf zones list --exportCsv=/path/to/file.csv`.
+- Allow deleting dns with more than 1 record per command, `cf dns delete example.com dns1 dns2 dns3`.
+
+### Changed
+- Bump all npm packages to the latest version.
 
 ## [0.4.0] - 2020-07-29
 
