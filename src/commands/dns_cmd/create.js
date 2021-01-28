@@ -64,13 +64,13 @@ exports.builder = {
 		default: true,
 		describe:
 			'Whether the record is receiving the performance and security benefits of Cloudflare, default: true',
-		type: 'string',
+		type: 'boolean',
 	},
 	priority: {
 		default: 0,
 		describe:
 			'Used with some records like MX and SRV to determine priority. If you do not supply a priority for an MX record, a default value of 0 will be set',
-		type: 'string',
+		type: 'number',
 	},
 };
 exports.handler = withSpinner(runCommand);

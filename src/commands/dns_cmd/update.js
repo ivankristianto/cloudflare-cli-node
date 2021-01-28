@@ -72,7 +72,7 @@ exports.builder = {
 		default: true,
 		describe:
 			'Whether the record is receiving the performance and security benefits of Cloudflare, default: true',
-		type: 'string',
+		type: 'boolean',
 	},
 	priority: {
 		default: 0,
