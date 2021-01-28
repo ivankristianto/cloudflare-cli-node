@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ## [next]
 
+## [0.6.0] - 2021-01-28
+
+### Added
+- Allow setting zones ssl, `cf zones settings ssl example.com [--value=full|flexible|strict|off]`.
+
+### Changed
+- Fix proxied value to boolean type.
+
 ## [0.5.0] - 2020-08-18
 
 ### Added
