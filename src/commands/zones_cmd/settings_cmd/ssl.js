@@ -16,11 +16,11 @@ async function runCommand(argv) {
 
 	if (value) {
 		requestArgs = { value: value.toString() };
-		spinner.text = `Updating Zone always use https setting…`;
-		response = await Zones.setSettings(zone, 'always_use_https', requestArgs);
+		spinner.text = `Updating Zone SSL setting…`;
+		response = await Zones.setSettings(zone, 'ssl', requestArgs);
 	} else {
-		spinner.text = `Getting Zone always use https setting…`;
-		response = await Zones.getSettings(zone, 'always_use_https');
+		spinner.text = `Getting Zone ssl setting…`;
+		response = await Zones.getSettings(zone, 'ssl');
 	}
 
 	const results = formatter.mappingField(fields, response.result);
@@ -31,15 +31,15 @@ async function runCommand(argv) {
 		separator,
 	});
 
-	spinner.text = `Request to Zone always use https setting done!`;
+	spinner.text = `Request to Zone ssl setting done!`;
 }
 
-exports.command = 'always_use_https <zone>';
-exports.desc = 'Get zone always use https settings';
+exports.command = 'ssl <zone>';
+exports.desc = 'Get zone ssl settings';
 exports.builder = {
 	...formatter.commandArgs(),
 	value: {
-		describe: 'Set the value, valid: on, off',
+		describe: 'Set the value, valid: off, flexible, full, strict',
 		type: 'string',
 	},
 	fields: {
