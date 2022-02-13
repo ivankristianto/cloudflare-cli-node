@@ -177,15 +177,17 @@ class formatter {
 				}
 
 				if (Array.isArray(item[field])) {
-					value = item[field].join(',');
+					if (typeof item[field][0] === 'string') {
+						value = item[field].join(',');
+					} else {
+						value = JSON.stringify(item[field]);
+					}
+					output.push(typeof item[field] === 'undefined' ? '' : value.toString());
+					return;
 				}
 
 				if (typeof item[field] === 'string') {
 					value = truncate(item[field]);
-				}
-
-				if (typeof item[field] === 'object') {
-					value = JSON.stringify(item[field]);
 				}
 
 				output.push(typeof item[field] === 'undefined' ? '' : value.toString());
@@ -217,10 +219,10 @@ class formatter {
 			}
 
 			if (Array.isArray(result[field])) {
-				if (typeof result[field] === 'object') {
-					results.push(JSON.stringify(result[field]));
-				} else {
+				if (typeof result[field][0] === 'string') {
 					results.push(result[field].join(','));
+				} else {
+					results.push(JSON.stringify(result[field]));
 				}
 				return;
 			}
