@@ -184,6 +184,10 @@ class formatter {
 					value = truncate(item[field]);
 				}
 
+				if (typeof item[field] === 'object') {
+					value = JSON.stringify(item[field]);
+				}
+
 				output.push(typeof item[field] === 'undefined' ? '' : value.toString());
 			});
 
@@ -213,7 +217,11 @@ class formatter {
 			}
 
 			if (Array.isArray(result[field])) {
-				results.push(result[field].join(','));
+				if (typeof result[field] === 'object') {
+					results.push(JSON.stringify(result[field]));
+				} else {
+					results.push(result[field].join(','));
+				}
 				return;
 			}
 
