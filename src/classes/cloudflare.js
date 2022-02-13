@@ -63,7 +63,8 @@ class Cloudflare extends Request {
 	 */
 	static isDomain(str) {
 		try {
-			const regex = /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/s;
+			const regex =
+				/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/s;
 			if (regex.exec(str) !== null) {
 				const urlTest = str.includes('http') ? str : `https://${str}`;
 				const urlObj = new URL(urlTest);
