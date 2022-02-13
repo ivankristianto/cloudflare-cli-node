@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ## [next]
 
+## [0.7.0] - 2022-02-13
+
+### Added
+- Add new commands: `rules <create|update|delete|list>` to manage zones page rules.
+
 ## [0.6.0] - 2021-01-28
 
 ### Added
