@@ -10,7 +10,7 @@
 
 ## Install
 
-1. `npm install -g cloudflare-api`.
+1. `npm install -g cloudflare-cli-node`.
 1. Generate your Cloudflare API Token, [see this doc](https://support.cloudflare.com/hc/en-us/articles/200167836-Managing-API-Tokens-and-Keys)
 1. Run `cf config setup`, and use your api token.
 1. Run `cf --help` for all available commands.
