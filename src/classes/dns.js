@@ -7,8 +7,8 @@ class DNS extends Cloudflare {
 	/**
 	 * Create a DNS Records for a Zone
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async create(args) {
 		const { type = 'A', name = '', content = '', ttl = 1, proxied = true, priority = 0 } = args;
@@ -40,10 +40,10 @@ class DNS extends Cloudflare {
 	/**
 	 * Delete a DNS Records for a Zone
 	 *
-	 * @param {object} args Object contain params
-	 * @param {Array} args.zone List of zones name to check for.
-	 * @param {Array} args.records List of DNS records to delete.
-	 * @returns {Promise<*>}
+	 * @param {Object} args         Object contain params
+	 * @param {Array}  args.zone    List of zones name to check for.
+	 * @param {Array}  args.records List of DNS records to delete.
+	 * @return {Promise<*>} 	    Cloudflare API response
 	 */
 	static async delete({ zone, records }) {
 		const maybeZoneId = await DNS.convertZoneNameToId(zone);
@@ -51,7 +51,7 @@ class DNS extends Cloudflare {
 
 		const output = [];
 		const promises = [];
-		records.forEach((record) => {
+		records.forEach(record => {
 			const deleteSequence = async () => {
 				const maybeRecordId = await DNS.convertRecordNameToId(zoneId, record);
 				const recordId = maybeRecordId || record;
@@ -88,8 +88,8 @@ class DNS extends Cloudflare {
 	/**
 	 * Export all DNS Records for a Zone into a txt file
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async export(args = {}) {
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
@@ -103,8 +103,8 @@ class DNS extends Cloudflare {
 	/**
 	 * Get DNS Records details
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async get(args) {
 		const maybeZoneId = await DNS.convertZoneNameToId(args.zone);
@@ -127,8 +127,8 @@ class DNS extends Cloudflare {
 	/**
 	 * Bulk Import DNS Records for a Zone from a txt file
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async import(args = {}) {
 		const { inputFile, proxied = true } = args;
@@ -145,11 +145,7 @@ class DNS extends Cloudflare {
 		formData.append('file', fs.createReadStream(inputFile));
 		formData.append('proxied', proxied.toString());
 
-		const response = await DNS.requestWithFormData(
-			dnsRecordsApiUrl.toString(),
-			'POST',
-			formData,
-		);
+		const response = await DNS.requestWithFormData(dnsRecordsApiUrl.toString(), 'POST', formData);
 
 		if (response.success !== true) {
 			throw new Error(response.errors[0].message);
@@ -161,8 +157,8 @@ class DNS extends Cloudflare {
 	/**
 	 * List DNS Records of a Zone
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async list(args = {}) {
 		const { type = '', name = '', content = '' } = args;
@@ -197,8 +193,8 @@ class DNS extends Cloudflare {
 	/**
 	 * Update a DNS Records for a Zone
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async update(args) {
 		const { type, name, content, ttl, proxied, priority, record, zone } = args;

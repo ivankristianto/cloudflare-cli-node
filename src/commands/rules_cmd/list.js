@@ -5,9 +5,9 @@ import withSpinner from '../../utils/withSpinner';
 /**
  * Run Command
  *
- * @param {object} argv Command params
+ * @param {Object} argv        Command params
  * @param {string} argv.format Output format
- * @returns {Promise<void>}
+ * @return {Promise<void>}
  */
 async function runCommand(argv) {
 	const { fields, separator, perPage, page, order, direction, spinner, status, zone } = argv;

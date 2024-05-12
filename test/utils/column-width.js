@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * External dependencies
  */
@@ -6,6 +7,7 @@ import { assert } from 'chai';
 /**
  * Internal dependencies
  */
+// eslint-disable-next-line import/no-unresolved
 import columnWidth from '../../lib/utils/column-width';
 
 describe('utils: columnWidth', () => {

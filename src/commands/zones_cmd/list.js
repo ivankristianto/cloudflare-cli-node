@@ -5,8 +5,8 @@ import withSpinner from '../../utils/withSpinner';
 /**
  * Run Command
  *
- * @param {object} argv Command params
- * @returns {Promise<void>}
+ * @param {Object} argv Command params
+ * @return {Promise<void>}
  */
 async function runCommand(argv) {
 	const {

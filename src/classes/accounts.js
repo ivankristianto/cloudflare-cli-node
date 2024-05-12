@@ -5,7 +5,7 @@ class Accounts extends Cloudflare {
 	 * Get Accounts Detail
 	 *
 	 * @param {string} accountId Account ID
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async get(accountId) {
 		const userApiUrl = Accounts.buildApiURL(`accounts/${accountId}`);
@@ -22,8 +22,8 @@ class Accounts extends Cloudflare {
 	/**
 	 * Get Accounts List
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async list(args) {
 		let userApiUrl = Accounts.buildApiURL('accounts');

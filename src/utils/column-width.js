@@ -1,3 +1,7 @@
+/**
+ * Column Width
+ * @param {string} columnName Column Name
+ */
 export default function columnWidth(columnName) {
 	switch (columnName) {
 		case 'type':

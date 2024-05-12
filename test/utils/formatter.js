@@ -1,8 +1,10 @@
+/* eslint-disable no-undef */
 import { assert } from 'chai';
 
 /**
  * Internal dependencies
  */
+// eslint-disable-next-line import/no-unresolved
 import formatter from '../../lib/utils/formatter';
 
 describe('utils: formatter', () => {
@@ -21,23 +23,11 @@ describe('utils: formatter', () => {
 				paused: false,
 				type: 'full',
 				development_mode: -51346952,
-				original_name_servers: [
-					'ns1.example.com',
-					'ns2.example.com',
-					'ns3.example.com',
-					'ns4.example.com',
-				],
+				original_name_servers: ['ns1.example.com', 'ns2.example.com', 'ns3.example.com', 'ns4.example.com'],
 				original_registrar: 'example.com, inc.',
 			};
 
-			const result = [
-				'123',
-				'zone',
-				'active',
-				'111',
-				'account name',
-				'ns1.example.com,ns2.example.com',
-			];
+			const result = ['123', 'zone', 'active', '111', 'account name', 'ns1.example.com,ns2.example.com'];
 
 			assert.deepEqual(formatter.mappingField(fields, obj), result);
 		});
@@ -59,12 +49,7 @@ describe('utils: formatter', () => {
 					paused: false,
 					type: 'full',
 					development_mode: -51346952,
-					original_name_servers: [
-						'ns1.example.com',
-						'ns2.example.com',
-						'ns3.example.com',
-						'ns4.example.com',
-					],
+					original_name_servers: ['ns1.example.com', 'ns2.example.com', 'ns3.example.com', 'ns4.example.com'],
 					original_registrar: 'example.com, inc.',
 				},
 				{
@@ -79,12 +64,7 @@ describe('utils: formatter', () => {
 					paused: false,
 					type: 'full',
 					development_mode: -51346952,
-					original_name_servers: [
-						'ns1.example.com',
-						'ns2.example.com',
-						'ns3.example.com',
-						'ns4.example.com',
-					],
+					original_name_servers: ['ns1.example.com', 'ns2.example.com', 'ns3.example.com', 'ns4.example.com'],
 					original_registrar: 'example.com, inc.',
 				},
 			];

@@ -5,8 +5,8 @@ class Rules extends Cloudflare {
 	/**
 	 * Create a DNS Records for a Zone
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async create(args) {
 		const { target = {}, action = {}, priority = 1, status = 'active' } = args;
@@ -34,10 +34,10 @@ class Rules extends Cloudflare {
 	/**
 	 * Delete a DNS Records for a Zone
 	 *
-	 * @param {object} args Object contain params
-	 * @param {Array} args.zone List of zones name to check for.
-	 * @param {Array} args.records List of DNS records to delete.
-	 * @returns {Promise<*>}
+	 * @param {Object} args         Object contain params
+	 * @param {Array}  args.zone    List of zones name to check for.
+	 * @param {Array}  args.records List of DNS records to delete.
+	 * @return {Promise<*>} 	    Cloudflare API response
 	 */
 	static async delete({ zone, records }) {
 		const maybeZoneId = await Rules.convertZoneNameToId(zone);
@@ -45,14 +45,12 @@ class Rules extends Cloudflare {
 
 		const output = [];
 		const promises = [];
-		records.forEach((record) => {
+		records.forEach(record => {
 			const deleteSequence = async () => {
 				const maybeRecordId = await Rules.convertRecordNameToId(zoneId, record);
 				const recordId = maybeRecordId || record;
 
-				const ruleRecordsApiUrl = Rules.buildApiURL(
-					`zones/${zoneId}/pagerules/${recordId}`,
-				);
+				const ruleRecordsApiUrl = Rules.buildApiURL(`zones/${zoneId}/pagerules/${recordId}`);
 
 				return Rules.request(ruleRecordsApiUrl.toString(), 'DELETE');
 			};
@@ -84,8 +82,8 @@ class Rules extends Cloudflare {
 	/**
 	 * Get Rule Records details
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async get(args) {
 		const maybeZoneId = await Rules.convertZoneNameToId(args.zone);
@@ -108,8 +106,8 @@ class Rules extends Cloudflare {
 	/**
 	 * List Rule Records of a Zone
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async list(args = {}) {
 		const { status = '', order = 'status', direction = 'desc' } = args;
@@ -144,8 +142,8 @@ class Rules extends Cloudflare {
 	/**
 	 * Update a Rule Records for a Zone
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async update(args) {
 		const { target = {}, action = {}, priority = 1, status = 'active', record, zone } = args;

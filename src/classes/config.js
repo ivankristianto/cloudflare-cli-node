@@ -55,7 +55,7 @@ class Config {
 	/**
 	 * Get auth token.
 	 *
-	 * @returns {Promise<boolean|*>}
+	 * @return {Promise<boolean|*>} Return token or false if token is not found.
 	 */
 	static async getAuthToken() {
 		let token = await Config.get('apiToken');
