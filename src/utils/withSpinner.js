@@ -4,7 +4,7 @@
 import ora from 'ora';
 // Spinner
 const withSpinner =
-	(command) =>
+	command =>
 	(...args) => {
 		const { disableSpinner } = args[0];
 
@@ -19,14 +19,12 @@ const withSpinner =
 		args[0].spinner = spinner;
 		let time = process.hrtime();
 		return command(...args).then(
-			(message) => {
+			message => {
 				time = process.hrtime(time);
-				spinner.succeed(
-					`${message || spinner.text} (in ${time[0]}s ${(time[1] / 1e6).toFixed(0)}ms)`,
-				);
+				spinner.succeed(`${message || spinner.text} (in ${time[0]}s ${(time[1] / 1e6).toFixed(0)}ms)`);
 				process.exit(0);
 			},
-			(error) => {
+			error => {
 				if (error) {
 					// Error is an unknown error. That means there was a bug in our code.
 					spinner.fail(typeof error === 'string' ? error : error.message);

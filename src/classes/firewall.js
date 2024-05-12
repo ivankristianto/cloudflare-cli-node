@@ -4,9 +4,9 @@ class Firewall extends Cloudflare {
 	/**
 	 * Create a new Firewall Rule
 	 *
-	 * @param {string} zone Zone ID or Zone Name
-	 * @param {object} rules Firewall rule in json object
-	 * @returns {Promise<*>}
+	 * @param {string} zone  Zone ID or Zone Name
+	 * @param {Object} rules Firewall rule in json object
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async create(zone, rules) {
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
@@ -25,9 +25,9 @@ class Firewall extends Cloudflare {
 	/**
 	 * Delete a Firewall Rule
 	 *
-	 * @param {string} zone Zone ID or Zone Name
+	 * @param {string} zone       Zone ID or Zone Name
 	 * @param {string} firewallId Firewall ID
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async delete(zone, firewallId) {
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
@@ -46,9 +46,9 @@ class Firewall extends Cloudflare {
 	/**
 	 * Get Firewall Rule Detail
 	 *
-	 * @param {string} zone Zone ID or Zone Name
+	 * @param {string} zone       Zone ID or Zone Name
 	 * @param {string} firewallId Firewall ID
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async get(zone, firewallId) {
 		const maybeZoneId = await Firewall.convertZoneNameToId(zone);
@@ -68,8 +68,8 @@ class Firewall extends Cloudflare {
 	 * List Firewall Rules
 	 *
 	 * @param {string} zone Zone ID or Zone Name
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>}	Cloudflare API response
 	 */
 	static async list(zone, args = {}) {
 		const { description = '', perPage = 20, page = 1 } = args;

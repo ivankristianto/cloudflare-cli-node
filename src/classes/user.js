@@ -4,7 +4,7 @@ class User extends Cloudflare {
 	/**
 	 * Get User Detail
 	 *
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async get() {
 		const userApiUrl = User.buildApiURL('user');

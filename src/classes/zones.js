@@ -4,10 +4,10 @@ class Zones extends Cloudflare {
 	/**
 	 * Force zones activation checks
 	 *
-	 * @param {object} args Object contain params
-	 * @param {Array} args.zones List of zones name to check for.
+	 * @param {Object} args       Object contain params
+	 * @param {Array}  args.zones List of zones name to check for.
 	 *
-	 * @returns {Array}
+	 * @return {Array} Array of objects containing zone name, status and message
 	 */
 	static async activationCheck({ zones = [] }) {
 		const zoneIds = await Promise.all(
@@ -19,7 +19,7 @@ class Zones extends Cloudflare {
 
 		const output = [];
 		const promises = [];
-		zoneIds.forEach((zoneId) => {
+		zoneIds.forEach(zoneId => {
 			const zonesApiUrl = Zones.buildApiURL(`zones/${zoneId}/activation_check`);
 			promises.push(Zones.request(zonesApiUrl.toString(), 'PUT', {}));
 		});
@@ -48,8 +48,8 @@ class Zones extends Cloudflare {
 	/**
 	 * Create a new Zone
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async create(args = {}) {
 		const { accountId, jumpStart = true, name, type = 'full' } = args;
@@ -71,7 +71,7 @@ class Zones extends Cloudflare {
 	 * Delete a Zone
 	 *
 	 * @param {string} zone Maybe Zone ID or Zone Name
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async delete(zone) {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
@@ -92,7 +92,7 @@ class Zones extends Cloudflare {
 	 * Get details of a zone of the string given
 	 *
 	 * @param {string} zone Maybe Zone ID or Zone Name
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async get(zone) {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
@@ -112,9 +112,9 @@ class Zones extends Cloudflare {
 	/**
 	 * Get details of a zone of the string given
 	 *
-	 * @param {string} zone Maybe Zone ID or Zone Name
+	 * @param {string} zone    Maybe Zone ID or Zone Name
 	 * @param {string} setting Setting to get
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async getSettings(zone, setting) {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
@@ -134,8 +134,8 @@ class Zones extends Cloudflare {
 	/**
 	 * List all zones
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async list(args = {}) {
 		const { account = '', debug = false, status = '', spinner = {}, zoneName = '' } = args;
@@ -171,9 +171,13 @@ class Zones extends Cloudflare {
 	/**
 	 * Purge Cache from a Zone
 	 *
-	 * @param {string} zone Maybe Zone ID or Zone Name
-	 * @param {object} args optional parameters
-	 * @returns {Promise<*>}
+	 * @param {string}  zone       Maybe Zone ID or Zone Name
+	 * @param {Object}  args       optional parameters
+	 * @param {boolean} args.all   Purge everything
+	 * @param {Array}   args.files Files to purge
+	 * @param {Array}   args.tags  Tags to purge
+	 * @param {Array}   args.hosts Hosts to purge
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async purge(zone, { all = false, files = [], tags = [], hosts = [] }) {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);
@@ -212,10 +216,10 @@ class Zones extends Cloudflare {
 	/**
 	 * Get details of a zone of the string given
 	 *
-	 * @param {string} zone Maybe Zone ID or Zone Name
+	 * @param {string} zone    Maybe Zone ID or Zone Name
 	 * @param {string} setting Setting to set
-	 * @param {object} args Setting args
-	 * @returns {Promise<*>}
+	 * @param {Object} args    Setting args
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async setSettings(zone, setting, args) {
 		const maybeZoneId = await Zones.convertZoneNameToId(zone);

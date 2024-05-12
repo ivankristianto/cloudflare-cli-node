@@ -5,25 +5,12 @@ import withSpinner from '../../utils/withSpinner';
 /**
  * Run Command
  *
- * @param {object} argv Command params
+ * @param {Object} argv        Command params
  * @param {string} argv.format Output format
- * @returns {Promise<void>}
+ * @return {Promise<void>}
  */
 async function runCommand(argv) {
-	const {
-		fields,
-		separator,
-		perPage,
-		page,
-		order,
-		content,
-		direction,
-		name,
-		spinner,
-		status,
-		type,
-		zone,
-	} = argv;
+	const { fields, separator, perPage, page, order, content, direction, name, spinner, status, type, zone } = argv;
 	let { format = 'table' } = argv;
 
 	if (fields === 'id') {

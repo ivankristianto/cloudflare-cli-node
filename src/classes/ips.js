@@ -4,8 +4,8 @@ class IPs extends Cloudflare {
 	/**
 	 * Get Accounts List
 	 *
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async list(args) {
 		let userApiUrl = IPs.buildApiURL('ips');

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * External dependencies
  */
@@ -6,6 +7,7 @@ import { assert } from 'chai';
 /**
  * Internal dependencies
  */
+// eslint-disable-next-line import/no-unresolved
 import { validateNotEmpty, validateBool } from '../../lib/utils/promp-validators';
 
 describe('utils: promp-validators', () => {

@@ -5,24 +5,12 @@ import withSpinner from '../../utils/withSpinner';
 /**
  * Run Command
  *
- * @param {object} argv Command params
+ * @param {Object} argv        Command params
  * @param {string} argv.format Output format
- * @returns {Promise<void>}
+ * @return {Promise<void>}
  */
 async function runCommand(argv) {
-	const {
-		fields,
-		type,
-		name,
-		content,
-		ttl,
-		proxied,
-		priority,
-		record,
-		separator,
-		spinner,
-		zone,
-	} = argv;
+	const { fields, type, name, content, ttl, proxied, priority, record, separator, spinner, zone } = argv;
 	let { format = 'list' } = argv;
 
 	if (fields === 'id') {
@@ -70,8 +58,7 @@ exports.builder = {
 	},
 	proxied: {
 		default: true,
-		describe:
-			'Whether the record is receiving the performance and security benefits of Cloudflare, default: true',
+		describe: 'Whether the record is receiving the performance and security benefits of Cloudflare, default: true',
 		type: 'boolean',
 	},
 	priority: {

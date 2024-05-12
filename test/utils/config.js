@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * External dependencies
  */
@@ -10,6 +11,7 @@ import temp from 'temp';
 /**
  * Internal dependencies
  */
+// eslint-disable-next-line import/no-unresolved
 import Config from '../../lib/classes/config';
 
 describe('utils: config', () => {

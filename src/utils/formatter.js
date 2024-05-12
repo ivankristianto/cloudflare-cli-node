@@ -9,7 +9,7 @@ class formatter {
 	/**
 	 * Command Builder argument params
 	 *
-	 * @returns {{format: {describe: string, type: string}, separator: {default: string, describe: string, type: string}}}
+	 * @return {{format: {describe: string, type: string}, separator: {default: string, describe: string, type: string}}} Command arguments
 	 */
 	static commandArgs() {
 		return {
@@ -29,22 +29,19 @@ class formatter {
 	 * Format the output with table format
 	 *
 	 * @param {string} fields Table head, comma separated
-	 * @param {Array} rows Rows of the data
+	 * @param {Array}  rows   Rows of the data
 	 */
 	static toTable(fields, rows) {
 		const table = new Table({
 			head: fields.split(','),
-			colWidths: fields.split(',').map((field) => columnWidth(field)),
+			colWidths: fields.split(',').map(field => columnWidth(field)),
 			wordWrap: true,
 		});
 
-		const colWidths = fields.split(',').map((field) => columnWidth(field));
+		const colWidths = fields.split(',').map(field => columnWidth(field));
 		rows.forEach(function (row) {
 			row.forEach(function (rowField, index) {
-				colWidths[index] = Math.min(
-					Math.max(colWidths[index], rowField.toString().length + 5),
-					80,
-				);
+				colWidths[index] = Math.min(Math.max(colWidths[index], rowField.toString().length + 5), 80);
 			});
 			table.push(row);
 		});
@@ -58,7 +55,7 @@ class formatter {
 	 * Format the output with table format
 	 *
 	 * @param {string} fields Label, comma separated
-	 * @param {Array} rows Rows of the data
+	 * @param {Array}  rows   Rows of the data
 	 */
 	static toList(fields, rows) {
 		const table = new Table({
@@ -91,7 +88,7 @@ class formatter {
 	/**
 	 * Format the output as defined separator
 	 *
-	 * @param {Array} rows Rows of the data
+	 * @param {Array}  rows      Rows of the data
 	 * @param {string} separator Separator, default a space
 	 */
 	static toString(rows, separator = ' ') {
@@ -110,8 +107,8 @@ class formatter {
 	/**
 	 * Display the output based on given arguments
 	 *
-	 * @param {Array} results Result to display
-	 * @param {object} args Arguments to show the output
+	 * @param {Array}  results Result to display
+	 * @param {Object} args    Arguments to show the output
 	 */
 	static output(results, args) {
 		const { fields, format, separator } = args;
@@ -138,10 +135,10 @@ class formatter {
 	/**
 	 * Output results into CSV file format with comma separated
 	 *
-	 * @param {string} file File path
-	 * @param {Array} results Result to display
-	 * @param {object} args Arguments for the fields
-	 * @returns {Promise<void>}
+	 * @param {string} file    File path
+	 * @param {Array}  results Result to display
+	 * @param {Object} args    Arguments for the fields
+	 * @return {Promise<void>}
 	 */
 	static async toCsv(file, results, args) {
 		const { fields } = args;
@@ -157,12 +154,12 @@ class formatter {
 	/**
 	 * Filter fields from array of json objects
 	 *
-	 * @param {string} fields Fields to get in comma separated
-	 * @param {Array} results Array of json objects.
-	 * @returns {Array}
+	 * @param {string} fields  Fields to get in comma separated
+	 * @param {Array}  results Array of json objects.
+	 * @return {Array} Array of filtered fields
 	 */
 	static mappingFields(fields, results) {
-		const truncate = (input) => {
+		const truncate = input => {
 			return input.length > 70 ? `${input.substring(0, 70)}...` : input;
 		};
 
@@ -201,12 +198,12 @@ class formatter {
 	 * Filter fields from a json object
 	 *
 	 * @param {string} fields Fields to get in comma separated
-	 * @param {object} result A json objects.
-	 * @returns {Array}
+	 * @param {Object} result A json objects.
+	 * @return {Array} Array of filtered fields
 	 */
 	static mappingField(fields, result) {
 		const results = [];
-		fields.split(',').forEach((field) => {
+		fields.split(',').forEach(field => {
 			if (field.includes('.')) {
 				const deepValue = getDeep(result, field);
 				results.push(deepValue);

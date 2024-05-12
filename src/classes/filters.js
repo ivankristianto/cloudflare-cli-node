@@ -5,8 +5,8 @@ class Filters extends Cloudflare {
 	 * Update a single filter
 	 *
 	 * @param {string} zone Zone ID or Zone Name
-	 * @param {object} args Filter object
-	 * @returns {Promise<*>}
+	 * @param {Object} args Filter object
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async create(zone, args) {
 		const { expressions } = args;
@@ -26,9 +26,9 @@ class Filters extends Cloudflare {
 	/**
 	 * Delete a Firewall Filter
 	 *
-	 * @param {string} zone Zone ID or Zone Name
+	 * @param {string} zone     Zone ID or Zone Name
 	 * @param {string} filterId filter ID
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async delete(zone, filterId) {
 		const maybeZoneId = await Filters.convertZoneNameToId(zone);
@@ -47,9 +47,9 @@ class Filters extends Cloudflare {
 	/**
 	 * Get Firewall Filter Detail
 	 *
-	 * @param {string} zone Zone ID or Zone Name
+	 * @param {string} zone     Zone ID or Zone Name
 	 * @param {string} filterId filter ID
-	 * @returns {Promise<*>}
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async get(zone, filterId) {
 		const maybeZoneId = await Filters.convertZoneNameToId(zone);
@@ -69,8 +69,8 @@ class Filters extends Cloudflare {
 	 * List Firewall Filter
 	 *
 	 * @param {string} zone Zone ID or Zone Name
-	 * @param {object} args Arguments to pass to request string
-	 * @returns {Promise<*>}
+	 * @param {Object} args Arguments to pass to request string
+	 * @return {Promise<*>} Cloudflare API response
 	 */
 	static async list(zone, args = {}) {
 		const maybeZoneId = await Filters.convertZoneNameToId(zone);
@@ -91,10 +91,10 @@ class Filters extends Cloudflare {
 	/**
 	 * Update a single filter
 	 *
-	 * @param {string} zone Zone ID or Zone Name
+	 * @param {string} zone     Zone ID or Zone Name
 	 * @param {string} filterId filter ID
-	 * @param {object} args Filter object
-	 * @returns {Promise<*>}
+	 * @param {Object} args     Filter object
+	 * @return {Promise<*>}     Cloudflare API response
 	 */
 	static async update(zone, filterId, args) {
 		const { paused = false, expression } = args;

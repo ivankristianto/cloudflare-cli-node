@@ -6,9 +6,9 @@ import withSpinner from '../../utils/withSpinner';
 /**
  * Run Command
  *
- * @param {object} argv Command params
+ * @param {Object} argv        Command params
  * @param {string} argv.format Output format
- * @returns {Promise<void>}
+ * @return {Promise<void>}
  */
 async function runCommand(argv) {
 	const {
@@ -75,8 +75,7 @@ exports.builder = {
 		type: 'string',
 	},
 	action: {
-		describe:
-			'The firewall action to perform, values: log, bypass, allow. challenge, js_challenge, block',
+		describe: 'The firewall action to perform, values: log, bypass, allow. challenge, js_challenge, block',
 		type: 'string',
 		demandOption: true,
 	},
