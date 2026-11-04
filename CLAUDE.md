@@ -42,6 +42,11 @@ Try the CLI locally with `node bin/cf <command>` after a build, or `npm link` to
 
 Tests live in `test/utils/` and cover only the utilities and `Config`, importing from `lib/`. `Config` tests stub `Config.getConfigFile` with sinon and copy `test/fixtures/config/` into a temp dir. There are no tests for commands or API classes.
 
+## Releasing
+
+1. In a PR: set the version with `npm pkg set version=X.Y.Z && npm install --package-lock-only --ignore-scripts`, and move `CHANGELOG.md` entries from `[next]` to `[X.Y.Z] - <date>`. Don't use `npm version`: its `postversion` script pushes straight to `main`, which the branch ruleset rejects.
+2. After merge, create a GitHub release with tag `X.Y.Z` (no `v`, matching earlier tags). `.github/workflows/npm-publish.yml` publishes it through npm trusted publishing (OIDC), so there is no npm token in the repo. The package's trusted publisher on npmjs.com must name `ivankristianto/cloudflare-cli-node` and `npm-publish.yml`, and `repository.url` in `package.json` must keep pointing at that repo.
+
 ## Reference
 
 `HOWTO.md` lists example invocations for every command, including the `xargs` pipeline pattern. Full command docs are in the project wiki: https://github.com/ivankristianto/cloudflare-cli-node/wiki
