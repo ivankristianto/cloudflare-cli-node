@@ -67,5 +67,11 @@
   },
   "engines": {
     "node": ">=22.18"
-  }
+  },
+  "files": [
+    "lib",
+    "bin",
+    "HOWTO.md",
+    "CHANGELOG.md"
+  ]
 }
