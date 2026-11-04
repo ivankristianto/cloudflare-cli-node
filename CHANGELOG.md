@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ## [next]
 
+## [0.8.0] - 2026-11-04
+
 ### Changed
 - Require Node.js 22.18 or above.
 - Bump all npm packages to the latest version, except yargs, which stays on 17.
 - Ship code compiled for Node 22.18, with native async/await.
+
+### Security
+- Clear all 6 npm audit advisories in production dependencies, including 1 critical in form-data and 2 high in lodash and tmp.
 
 ## [0.7.0] - 2022-02-13
 
