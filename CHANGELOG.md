@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file, per [the Ke
 
 ## [next]
 
+### Changed
+- Bump all npm packages to the latest version, except yargs, which stays on 17.
+- Ship code compiled for Node 22.18, with native async/await.
+
 ## [0.7.0] - 2022-02-13
 
 ### Added

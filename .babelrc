@@ -1,18 +1,14 @@
 {
+	"targets": {
+		"node": "22.18"
+	},
 	"presets": [
 		[
 			"@babel/preset-env",
 			{
-				"useBuiltIns": "entry",
-				"corejs": "3"
+				"modules": "commonjs"
 			}
 		]
 	],
-	"plugins": [
-		["@babel/plugin-transform-runtime",
-			{
-				"regenerator": true
-			}
-		]
-	]
+	"plugins": ["@babel/plugin-transform-runtime"]
 }
