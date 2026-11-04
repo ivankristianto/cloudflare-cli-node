@@ -6,7 +6,7 @@
 
 ## Requirements
 
-* Node.js 10 or above
+* Node.js 22.18 or above
 
 ## Install
 

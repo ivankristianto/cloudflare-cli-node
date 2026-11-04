@@ -64,5 +64,8 @@
   ],
   "bugs": {
     "url": "https://github.com/ivankristianto/cloudflare-cli-node/issues"
+  },
+  "engines": {
+    "node": ">=22.18"
   }
 }
