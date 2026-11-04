@@ -11,11 +11,10 @@ import withSpinner from '../../../utils/withSpinner';
  */
 async function runCommand(argv) {
 	const { fields, format = 'list', separator, spinner, value, zone } = argv;
-	let requestArgs = {};
 	let response;
 
 	if (value) {
-		requestArgs = { value };
+		const requestArgs = { value };
 		spinner.text = `Updating Zone development mode setting…`;
 		response = await Zones.setSettings(zone, 'development_mode', requestArgs);
 	} else {

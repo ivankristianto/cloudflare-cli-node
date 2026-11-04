@@ -11,11 +11,10 @@ import withSpinner from '../../../utils/withSpinner';
  */
 async function runCommand(argv) {
 	const { fields, format, separator, spinner, value, zone } = argv;
-	let requestArgs = {};
 	let response;
 
 	if (value) {
-		requestArgs = { value: value.toString() };
+		const requestArgs = { value: value.toString() };
 		spinner.text = `Updating Zone SSL setting…`;
 		response = await Zones.setSettings(zone, 'ssl', requestArgs);
 	} else {

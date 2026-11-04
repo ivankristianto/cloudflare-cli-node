@@ -72,7 +72,7 @@ class Cloudflare extends Request {
 			}
 			return false;
 		} catch (err) {
-			console.log('DEBUG: err', err); // eslint-disable-line no-console
+			console.log('DEBUG: err', err);
 			return false;
 		}
 	}

@@ -11,11 +11,10 @@ import withSpinner from '../../../utils/withSpinner';
  */
 async function runCommand(argv) {
 	const { fields, format, separator, spinner, value, zone } = argv;
-	let requestArgs = {};
 	let response;
 
 	if (value) {
-		requestArgs = { value: JSON.parse(value) };
+		const requestArgs = { value: JSON.parse(value) };
 		spinner.text = `Updating Zone minify setting…`;
 		response = await Zones.setSettings(zone, 'minify', requestArgs);
 	} else {
