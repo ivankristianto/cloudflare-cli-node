@@ -1,4 +1,3 @@
-/* eslint-disable no-process-exit */
 // This code borrowed from @wordpress/env with a few adjustments.
 
 import ora from 'ora';
@@ -9,13 +8,11 @@ const withSpinner =
 		const { disableSpinner } = args[0];
 
 		if (disableSpinner) {
-			// eslint-disable-next-line no-param-reassign
 			args[0].spinner = {};
 			return command(...args);
 		}
 
 		const spinner = ora().start();
-		// eslint-disable-next-line no-param-reassign
 		args[0].spinner = spinner;
 		let time = process.hrtime();
 		return command(...args).then(

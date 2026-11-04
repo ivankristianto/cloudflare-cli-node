@@ -4,7 +4,6 @@
 import yargs from 'yargs';
 import log from './utils/logger';
 
-// eslint-disable-next-line consistent-return
 function main() {
 	try {
 		return yargs
