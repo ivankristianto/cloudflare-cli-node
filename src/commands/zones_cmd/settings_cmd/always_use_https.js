@@ -1,37 +1,5 @@
-import Zones from '../../../classes/zones';
 import formatter from '../../../utils/formatter';
-import withSpinner from '../../../utils/withSpinner';
-
-/**
- * Run Command
- *
- * @param {object} argv Command params
- * @param {string} argv.format Output format
- * @returns {Promise<void>}
- */
-async function runCommand(argv) {
-	const { fields, format, separator, spinner, value, zone } = argv;
-	let response;
-
-	if (value) {
-		const requestArgs = { value: value.toString() };
-		spinner.text = `Updating Zone always use https setting…`;
-		response = await Zones.setSettings(zone, 'always_use_https', requestArgs);
-	} else {
-		spinner.text = `Getting Zone always use https setting…`;
-		response = await Zones.getSettings(zone, 'always_use_https');
-	}
-
-	const results = formatter.mappingField(fields, response.result);
-
-	formatter.output([results], {
-		fields,
-		format,
-		separator,
-	});
-
-	spinner.text = `Request to Zone always use https setting done!`;
-}
+import zoneSettingCommand from '../../../utils/zone-setting-command';
 
 exports.command = 'always_use_https <zone>';
 exports.desc = 'Get zone always use https settings';
@@ -47,4 +15,4 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = withSpinner(runCommand);
+exports.handler = zoneSettingCommand({ setting: 'always_use_https', label: 'always use https' });

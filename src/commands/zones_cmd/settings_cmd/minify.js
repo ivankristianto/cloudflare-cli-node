@@ -1,37 +1,5 @@
-import Zones from '../../../classes/zones';
 import formatter from '../../../utils/formatter';
-import withSpinner from '../../../utils/withSpinner';
-
-/**
- * Run Command
- *
- * @param {object} argv Command params
- * @param {string} argv.format Output format
- * @returns {Promise<void>}
- */
-async function runCommand(argv) {
-	const { fields, format, separator, spinner, value, zone } = argv;
-	let response;
-
-	if (value) {
-		const requestArgs = { value: JSON.parse(value) };
-		spinner.text = `Updating Zone minify setting…`;
-		response = await Zones.setSettings(zone, 'minify', requestArgs);
-	} else {
-		spinner.text = `Getting Zone minify setting…`;
-		response = await Zones.getSettings(zone, 'minify');
-	}
-
-	const results = formatter.mappingField(fields, response.result.value);
-
-	formatter.output([results], {
-		fields,
-		format,
-		separator,
-	});
-
-	spinner.text = `Request to Zone minify setting done!`;
-}
+import zoneSettingCommand from '../../../utils/zone-setting-command';
 
 exports.command = 'minify <zone>';
 exports.desc = 'Get zone minify settings';
@@ -47,4 +15,9 @@ exports.builder = {
 		type: 'string',
 	},
 };
-exports.handler = withSpinner(runCommand);
+exports.handler = zoneSettingCommand({
+	setting: 'minify',
+	label: 'minify',
+	parseValue: JSON.parse,
+	pickResult: (result) => result.value,
+});
